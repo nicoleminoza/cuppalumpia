@@ -90,12 +90,15 @@ function Header() {
       <div style={{ maxWidth: 1200, margin: '0 auto', height: 64,
         padding: '0 clamp(22px, 6vw, 84px)', display: 'flex', alignItems: 'center',
         justifyContent: 'space-between', gap: 20 }}>
-        <a href="#top" style={{ display: 'flex', alignItems: 'baseline', gap: 8,
+        <a href="#top" style={{ display: 'flex', alignItems: 'center', gap: 10,
           textDecoration: 'none', color: 'var(--ink)' }}>
-          <span style={{ fontFamily: "'Yellowtail',cursive", fontSize: 22, color: 'var(--accent)',
-            transform: 'rotate(-3deg)', lineHeight: 1 }}>Cuppa</span>
-          <span style={{ fontFamily: "var(--display)", fontSize: 17, letterSpacing: '0.04em' }}>
-            LUMPIA</span>
+          <span style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+            <span style={{ fontFamily: "'Yellowtail',cursive", fontSize: 22, color: 'var(--accent)',
+              transform: 'rotate(-3deg)', lineHeight: 1 }}>Cuppa</span>
+            <span style={{ fontFamily: "var(--display)", fontSize: 17, letterSpacing: '0.04em' }}>
+              LUMPIA</span>
+          </span>
+          <img src="lumpia-mark.png" alt="" style={{ height: 18, width: 'auto', display: 'block' }} />
         </a>
         <nav style={{ display: 'flex', alignItems: 'center', gap: 30 }} className="cl-nav">
           {links.map(([href, label]) =>
@@ -131,13 +134,15 @@ function Hero({ tagline }) {
             <Kicker style={{ fontSize: 14, letterSpacing: '0.26em', lineHeight: 1.8 }}>
               Filipino Family Recipe · Bainbridge Island<br />Rolling Since 2026
             </Kicker>
-            <div style={{ margin: '26px 0 0', lineHeight: 0.82 }}>
+            <div style={{ margin: '26px 0 0', display: 'flex', flexDirection: 'column',
+              alignItems: 'flex-start', lineHeight: 0.78 }}>
               <div style={{ fontFamily: "'Yellowtail',cursive", color: 'var(--accent)',
-                fontSize: 'clamp(40px, 6vw, 78px)', transform: 'rotate(-3deg)',
-                marginLeft: 6 }}>Cuppa</div>
+                fontSize: 'clamp(43px, 6.7vw, 100px)', transform: 'rotate(-4deg)',
+                transformOrigin: 'left center', marginLeft: '0.14em',
+                position: 'relative', zIndex: 1 }}>Cuppa</div>
               <div style={{ fontFamily: "var(--display)", color: 'var(--ink)',
                 fontSize: 'clamp(64px, 12vw, 168px)', letterSpacing: '0.005em',
-                marginTop: 'clamp(2px, 1vw, 10px)' }}>LUMPIA</div>
+                marginTop: 'clamp(-7px, -0.25vw, 0px)' }}>LUMPIA</div>
             </div>
             <p style={{ fontFamily: "'Lora',serif", fontSize: 'clamp(17px, 1.6vw, 22px)',
               lineHeight: 1.55, color: 'var(--ink-soft)', maxWidth: 440,

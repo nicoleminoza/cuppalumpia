@@ -125,7 +125,7 @@ function Footer() {
                 marginLeft: '0.14em', position: 'relative', zIndex: 1 }}>Cuppa</span>
               <span style={{ fontFamily: "var(--display)", color: 'var(--ink)',
                 fontSize: 'clamp(62px,11.5vw,144px)', letterSpacing: '0.005em',
-                marginTop: 'clamp(2px,0.6vw,10px)' }}>LUMPIA</span>
+                marginTop: 'clamp(-7px,-0.25vw,0px)' }}>LUMPIA</span>
             </div>
             <div style={{ fontFamily: "'Oswald',sans-serif", fontWeight: 600, fontSize: 13,
               letterSpacing: '0.3em', textTransform: 'uppercase', color: 'var(--muted)',

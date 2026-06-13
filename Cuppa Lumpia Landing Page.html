@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cuppa Lumpia · Hand-rolled on Bainbridge Island</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+<meta name="theme-color" content="#15100A" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Anton&family=Abril+Fatface&family=Yellowtail&family=Oswald:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    /* kraft cup material — constant across themes */
+    --kraft-body:linear-gradient(90deg,#6f4a29 0%,#bd8a59 15%,#cd9a66 48%,#a9743f 80%,#6b4727 100%);
+    --kraft-rim:linear-gradient(90deg,#5f3f22,#cd9a66 42%,#a9743f 80%,#5f3f22);
+    --kraft-open:radial-gradient(ellipse at 50% 35%,#9a6a3e,#6f4a29 75%,#553620);
+    --kraft-edge:#5f3f22;
+
+    /* theme tokens — overwritten by applyTheme() */
+    --bg:#FBFAF6; --surface:#F3EFE6; --stage:#EAE4D6;
+    --ink:#161310; --ink-soft:#4c4236; --muted:#8b7d6b;
+    --line:rgba(22,18,12,0.14);
+    --accent:#A8431F; --green:#3C5A34;
+    --ph-a:#EEE9DD; --ph-b:#E6E0D1;
+    --display:'Alfa Slab One'; --rhythm:1; --scheme:light;
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; -webkit-text-size-adjust:100%; background:var(--bg); }
+  body{ margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Lora',serif; -webkit-font-smoothing:antialiased;
+    transition:background .4s ease, color .4s ease; }
+  /* paint the page bg on a wrapper too, so an injected `body{background:transparent}`
+     (present inside design-canvas iframes) can't reveal white behind the page */
+  #cl-page{ min-height:100vh; background:var(--bg); color:var(--ink);
+    transition:background .4s ease, color .4s ease; }
+  [id]{ scroll-margin-top:84px; }
+  ::selection{ background:var(--accent); color:var(--bg); }
+
+  .cl-navlink{ position:relative; transition:color .2s; }
+  .cl-navlink:hover{ color:var(--ink) !important; }
+  .cl-navlink::after{ content:''; position:absolute; left:0; right:0; bottom:-6px; height:1px;
+    background:var(--accent); transform:scaleX(0); transform-origin:left; transition:transform .25s; }
+  .cl-navlink:hover::after{ transform:scaleX(1); }
+  .cl-flink{ transition:color .2s; }
+  .cl-flink:hover{ color:var(--accent) !important; }
+
+  @keyframes clPulse{ 0%{ transform:scale(0.9); opacity:0.6; } 70%{ transform:scale(1.7); opacity:0; }
+    100%{ opacity:0; } }
+  @keyframes clFade{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:none; } }
+  .cl-fade{ animation:clFade .4s ease both; }
+  @media (prefers-reduced-motion:reduce){ .cl-fade{ animation:none; } html{ scroll-behavior:auto; } }
+
+  /* date input icon tint follows scheme */
+  input[type=date]{ color-scheme:light; }
+  :root[data-scheme=dark] input[type=date]{ color-scheme:dark; }
+
+  @media (max-width:980px){
+    .cl-hero-grid{ grid-template-columns:1fr !important; }
+    .cl-hero-grid .cl-stage{ max-width:420px; margin:0 auto; }
+  }
+  @media (max-width:820px){
+    .cl-two,.cl-refresh,.cl-resv,.cl-foot{ grid-template-columns:1fr !important; }
+    .cl-refresh > div:first-child{ order:2; }
+  }
+  @media (max-width:680px){
+    .cl-nav{ display:none !important; }
+  }
+</style>
+</head>
+<body>
+<template id="__bundler_thumbnail" data-bg-color="#161310">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#161310"/>
+    <rect x="360" y="330" width="480" height="150" rx="14" fill="#0e0c09" stroke="#F4EFE3" stroke-width="3"/>
+    <text x="600" y="430" text-anchor="middle" font-family="Georgia,serif" font-weight="bold" font-size="64" fill="#F4EFE3" letter-spacing="2">CUPPA LUMPIA</text>
+    <text x="600" y="250" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-size="40" fill="#A8431F">Cuppa</text>
+  </svg>
+</template>
+
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="cl-icons.jsx"></script>
+<script type="text/babel" src="cl-brand.jsx"></script>
+<script type="text/babel" src="cl-sections.jsx"></script>
+<script type="text/babel" src="cl-sections2.jsx"></script>
+<script type="text/babel" src="cl-reserve.jsx"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+
+<div id="tweaks-root"></div>
+
+<script type="text/babel">
+const { AnnounceBar, Header, Hero, Stand, Pairing, Reserve, Craft, Footer } = window;
+const { useTweaks, TweaksPanel, TweakSection, TweakRadio, TweakColor, TweakText } = window;
+
+const CL_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "direction": "ink",
+  "accent": "#E7A11D",
+  "display": "Anton",
+  "density": "editorial",
+  "tagline": "Hand-rolled, fried to order, small by design. The way Lola made it."
+}/*EDITMODE-END*/;
+
+// ---- theme token sets per direction ----
+const THEMES = {
+  white: { bg:'#FBFAF6', surface:'#F3EFE6', stage:'#EAE4D6', ink:'#161310',
+    inkSoft:'#4c4236', muted:'#8b7d6b', line:'rgba(22,18,12,0.14)',
+    pha:'#EEE9DD', phb:'#E6E0D1', scheme:'light' },
+  ink: { bg:'#141009', surface:'#1C1710', stage:'#231D14', ink:'#F4EFE3',
+    inkSoft:'#d6ccba', muted:'#998c78', line:'rgba(244,239,227,0.16)',
+    pha:'#1F1A12', phb:'#272016', scheme:'dark' },
+  kraft: { bg:'#F4EFE3', surface:'#EAE2D1', stage:'#DfD5BF', ink:'#241910',
+    inkSoft:'#564433', muted:'#8a7558', line:'rgba(42,28,18,0.16)',
+    pha:'#EBE3D1', phb:'#E2D8C2', scheme:'light' },
+};
+// accent resolved per scheme so it stays legible on dark
+const ACCENT = {
+  '#A8431F': { light:'#A8431F', dark:'#D9774A' },
+  '#E7A11D': { light:'#B27A12', dark:'#E7A11D' },
+  '#3C5A34': { light:'#3C5A34', dark:'#82A56C' },
+};
+const GREEN = { light:'#3C5A34', dark:'#82A56C' };
+const RHYTHM = { cozy:0.82, editorial:1, roomy:1.2 };
+
+function applyTheme(t){
+  const r = document.documentElement;
+  const th = THEMES[t.direction] || THEMES.white;
+  const dark = th.scheme === 'dark';
+  r.setAttribute('data-scheme', th.scheme);
+  r.style.setProperty('--bg', th.bg);
+  r.style.setProperty('--surface', th.surface);
+  r.style.setProperty('--stage', th.stage);
+  r.style.setProperty('--ink', th.ink);
+  r.style.setProperty('--ink-soft', th.inkSoft);
+  r.style.setProperty('--muted', th.muted);
+  r.style.setProperty('--line', th.line);
+  r.style.setProperty('--ph-a', th.pha);
+  r.style.setProperty('--ph-b', th.phb);
+  r.style.setProperty('--scheme', th.scheme);
+  const ac = (ACCENT[t.accent] || ACCENT['#A8431F'])[dark ? 'dark' : 'light'];
+  r.style.setProperty('--accent', ac);
+  r.style.setProperty('--green', GREEN[dark ? 'dark' : 'light']);
+  r.style.setProperty('--display', "'" + (t.display || 'Alfa Slab One') + "'");
+  r.style.setProperty('--rhythm', String(RHYTHM[t.density] || 1));
+}
+
+// ---- URL preset: ?dir=white|ink|kraft drives the side-by-side directions ----
+const DIR_PRESET = {
+  white: { direction:'white', accent:'#A8431F' },
+  ink:   { direction:'ink',   accent:'#E7A11D' },
+  kraft: { direction:'kraft', accent:'#3C5A34' },
+};
+const urlDir = new URLSearchParams(location.search).get('dir');
+const INITIAL = { ...CL_DEFAULTS, ...(DIR_PRESET[urlDir] || {}) };
+applyTheme(INITIAL); // seed before mount to avoid a flash
+
+function App(){
+  const [t, setTweak] = useTweaks(INITIAL);
+  React.useEffect(() => { applyTheme(t); }, [t]);
+  return (
+    <React.Fragment>
+      <div id="cl-page">
+        <AnnounceBar />
+        <Header />
+        <Hero tagline={t.tagline} />
+        <Stand />
+        <Pairing />
+        <Reserve />
+        <Craft />
+        <Footer />
+      </div>
+      <TweaksPanel title="Tweaks">
+        <TweakSection label="Direction" />
+        <TweakRadio label="Background" value={t.direction}
+          options={[{value:'white',label:'Optic'},{value:'ink',label:'Ink'},{value:'kraft',label:'Kraft'}]}
+          onChange={(v) => setTweak('direction', v)} />
+        <TweakColor label="Accent" value={t.accent}
+          options={['#A8431F', '#E7A11D', '#3C5A34']}
+          onChange={(v) => setTweak('accent', v)} />
+        <TweakSection label="Type" />
+        <TweakRadio label="Display font" value={t.display}
+          options={[{value:'Alfa Slab One',label:'Slab'},{value:'Anton',label:'Anton'},{value:'Abril Fatface',label:'Abril'}]}
+          onChange={(v) => setTweak('display', v)} />
+        <TweakSection label="Layout" />
+        <TweakRadio label="Whitespace" value={t.density}
+          options={[{value:'cozy',label:'Cozy'},{value:'editorial',label:'Editorial'},{value:'roomy',label:'Roomy'}]}
+          onChange={(v) => setTweak('density', v)} />
+        <TweakSection label="Hero copy" />
+        <TweakText label="Tagline" value={t.tagline}
+          onChange={(v) => setTweak('tagline', v)} />
+      </TweaksPanel>
+    </React.Fragment>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
