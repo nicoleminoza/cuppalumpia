@@ -4,13 +4,13 @@ const { Section: Section2, Statement: Statement2, SectionTag: SectionTag2, Kicke
 
 const REHEAT = [
   { id: 'air', tab: 'Air Fryer', flag: 'Recommended', Icon: window.Wind,
-    temp: '375°F', time: '3–4', unit: 'min',
+    temp: '375°F', time: '3 – 4 min',
     body: 'The closest thing to fresh out of the pan. Single layer, no oil, shake once. Pull them the moment the edges go deep gold.' },
   { id: 'oven', tab: 'Oven', flag: null, Icon: window.Flame,
-    temp: '400°F', time: '5–6', unit: 'min',
+    temp: '400°F', time: '5 – 6 min',
     body: 'Set them on a wire rack over a sheet pan so the heat circles underneath. No rack, no crisp: the bottoms steam against the metal.' },
   { id: 'rule', tab: 'The Rule', flag: 'Read this', Icon: window.NoEntry,
-    temp: null, time: null, unit: null,
+    temp: null, time: null,
     body: null },
 ];
 
@@ -70,13 +70,8 @@ function Craft() {
               </div>
               <div style={{ width: 1, alignSelf: 'stretch', background: 'var(--line)' }} />
               <div>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: 'clamp(4px,0.6vw,9px)',
-                  whiteSpace: 'nowrap' }}>
-                  <span style={{ fontFamily: "var(--display)", fontSize: 'clamp(40px,6vw,76px)',
-                    lineHeight: 0.9, color: 'var(--accent)' }}>{cur.time}</span>
-                  <span style={{ fontFamily: "var(--display)", fontSize: 'clamp(19px,2.4vw,32px)',
-                    lineHeight: 0.9, color: 'var(--accent)', opacity: 0.8 }}>{cur.unit}</span>
-                </div>
+                <div style={{ fontFamily: "var(--display)", fontSize: 'clamp(40px,6vw,76px)',
+                  lineHeight: 0.9, color: 'var(--accent)' }}>{cur.time}</div>
                 <div style={{ fontFamily: "'Oswald',sans-serif", fontWeight: 600, fontSize: 12,
                   letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--muted)',
                   marginTop: 12 }}>Until golden</div>
@@ -125,7 +120,7 @@ function Footer() {
                 marginLeft: '0.14em', position: 'relative', zIndex: 1 }}>Cuppa</span>
               <span style={{ fontFamily: "var(--display)", color: 'var(--ink)',
                 fontSize: 'clamp(62px,11.5vw,144px)', letterSpacing: '0.005em',
-                marginTop: 'clamp(-7px,-0.25vw,0px)' }}>LUMPIA</span>
+                marginTop: '-0.10em' }}>LUMPIA</span>
             </div>
             <div style={{ fontFamily: "'Oswald',sans-serif", fontWeight: 600, fontSize: 13,
               letterSpacing: '0.3em', textTransform: 'uppercase', color: 'var(--muted)',
@@ -157,22 +152,6 @@ function Footer() {
           <span style={{ fontFamily: "'Oswald',sans-serif", fontSize: 11, letterSpacing: '0.18em',
             textTransform: 'uppercase', color: 'var(--muted)' }}>
             The Miñoza Family · From the Philippine Islands to Bainbridge Island · Est 2026</span>
-        </div>
-
-        <div style={{ marginTop: 'clamp(20px,3vw,30px)', display: 'flex', alignItems: 'baseline',
-          flexWrap: 'wrap', gap: 11, color: 'var(--muted)' }}>
-          <span style={{ fontFamily: "'Oswald',sans-serif", fontWeight: 600, fontSize: 10.5,
-            letterSpacing: '0.22em', textTransform: 'uppercase' }}>Typeset in</span>
-          <span style={{ fontFamily: "'Yellowtail',cursive", fontSize: 20, color: 'var(--ink-soft)',
-            lineHeight: 1 }}>Yellowtail</span>
-          <span style={{ opacity: 0.4 }}>·</span>
-          <span style={{ fontFamily: "var(--display)", fontSize: 13.5, color: 'var(--ink-soft)',
-            letterSpacing: '0.02em' }}>Anton</span>
-          <span style={{ opacity: 0.4 }}>·</span>
-          <span style={{ fontFamily: "'Lora',serif", fontSize: 15, color: 'var(--ink-soft)' }}>Lora</span>
-          <span style={{ opacity: 0.4 }}>·</span>
-          <span style={{ fontFamily: "'Oswald',sans-serif", fontWeight: 500, fontSize: 13.5,
-            color: 'var(--ink-soft)', letterSpacing: '0.05em' }}>Oswald</span>
         </div>
       </div>
     </footer>

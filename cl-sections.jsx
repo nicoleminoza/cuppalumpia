@@ -64,9 +64,7 @@ function AnnounceBar() {
           lineHeight: 1.4 }}>
           Frozen by the dozen &amp; catering available now.
           <span style={{ opacity: 0.62 }}>&nbsp; The farm stand opens </span>
-          <b style={{ fontWeight: 700, color: 'var(--bg)', background: 'var(--accent)',
-            padding: '2px 9px', borderRadius: 4, whiteSpace: 'nowrap',
-            boxDecorationBreak: 'clone', WebkitBoxDecorationBreak: 'clone' }}>June 27 &amp; 28</b>.
+          <b style={{ fontWeight: 600 }}>June 27 &amp; 28</b>.
         </span>
         <a href="#reserve" style={{ fontFamily: "'Oswald',sans-serif", fontWeight: 600,
           fontSize: 10.5, letterSpacing: '0.18em', textTransform: 'uppercase',
@@ -90,15 +88,12 @@ function Header() {
       <div style={{ maxWidth: 1200, margin: '0 auto', height: 64,
         padding: '0 clamp(22px, 6vw, 84px)', display: 'flex', alignItems: 'center',
         justifyContent: 'space-between', gap: 20 }}>
-        <a href="#top" style={{ display: 'flex', alignItems: 'center', gap: 10,
+        <a href="#top" style={{ display: 'flex', alignItems: 'baseline', gap: 8,
           textDecoration: 'none', color: 'var(--ink)' }}>
-          <span style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-            <span style={{ fontFamily: "'Yellowtail',cursive", fontSize: 22, color: 'var(--accent)',
-              transform: 'rotate(-3deg)', lineHeight: 1 }}>Cuppa</span>
-            <span style={{ fontFamily: "var(--display)", fontSize: 17, letterSpacing: '0.04em' }}>
-              LUMPIA</span>
-          </span>
-          <img src="lumpia-mark.png" alt="" style={{ height: 18, width: 'auto', display: 'block' }} />
+          <span style={{ fontFamily: "'Yellowtail',cursive", fontSize: 22, color: 'var(--accent)',
+            transform: 'rotate(-3deg)', lineHeight: 1 }}>Cuppa</span>
+          <span style={{ fontFamily: "var(--display)", fontSize: 17, letterSpacing: '0.04em' }}>
+            LUMPIA</span>
         </a>
         <nav style={{ display: 'flex', alignItems: 'center', gap: 30 }} className="cl-nav">
           {links.map(([href, label]) =>
@@ -134,15 +129,13 @@ function Hero({ tagline }) {
             <Kicker style={{ fontSize: 14, letterSpacing: '0.26em', lineHeight: 1.8 }}>
               Filipino Family Recipe · Bainbridge Island<br />Rolling Since 2026
             </Kicker>
-            <div style={{ margin: '26px 0 0', display: 'flex', flexDirection: 'column',
-              alignItems: 'flex-start', lineHeight: 0.78 }}>
+            <div style={{ margin: '26px 0 0', lineHeight: 0.82 }}>
               <div style={{ fontFamily: "'Yellowtail',cursive", color: 'var(--accent)',
-                fontSize: 'clamp(43px, 6.7vw, 100px)', transform: 'rotate(-4deg)',
-                transformOrigin: 'left center', marginLeft: '0.14em',
-                position: 'relative', zIndex: 1 }}>Cuppa</div>
+                fontSize: 'clamp(40px, 6vw, 78px)', transform: 'rotate(-3deg)',
+                marginLeft: 6 }}>Cuppa</div>
               <div style={{ fontFamily: "var(--display)", color: 'var(--ink)',
                 fontSize: 'clamp(64px, 12vw, 168px)', letterSpacing: '0.005em',
-                marginTop: 'clamp(-7px, -0.25vw, 0px)' }}>LUMPIA</div>
+                marginTop: 'clamp(2px, 1vw, 10px)' }}>LUMPIA</div>
             </div>
             <p style={{ fontFamily: "'Lora',serif", fontSize: 'clamp(17px, 1.6vw, 22px)',
               lineHeight: 1.55, color: 'var(--ink-soft)', maxWidth: 440,
@@ -161,12 +154,9 @@ function Hero({ tagline }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: 11, marginTop: 18,
               flexWrap: 'wrap' }}>
               <StatusDot open={s.open} />
-              <span style={{ fontFamily: "'Oswald',sans-serif", fontWeight: s.prelaunch ? 700 : 600,
-                fontSize: 11.5, letterSpacing: '0.16em', textTransform: 'uppercase',
-                color: s.prelaunch ? 'var(--bg)' : s.open ? 'var(--green)' : 'var(--ink)',
-                background: s.prelaunch ? 'var(--accent)' : 'transparent',
-                padding: s.prelaunch ? '3px 10px' : 0, borderRadius: s.prelaunch ? 4 : 0,
-                whiteSpace: 'nowrap' }}>{s.label}</span>
+              <span style={{ fontFamily: "'Oswald',sans-serif", fontWeight: 600, fontSize: 11.5,
+                letterSpacing: '0.16em', textTransform: 'uppercase',
+                color: s.open ? 'var(--green)' : 'var(--ink)' }}>{s.label}</span>
               <span style={{ fontFamily: "'Lora',serif", fontStyle: 'italic', fontSize: 13,
                 color: 'var(--muted)' }}>{s.sub}</span>
             </div>
@@ -204,12 +194,9 @@ function Stand() {
             padding: '13px 20px', border: '1px solid var(--line)', background: 'var(--surface)',
             flexWrap: 'wrap' }}>
             <StatusDot open={s.open} />
-            <span style={{ fontFamily: "'Oswald',sans-serif", fontWeight: s.prelaunch ? 700 : 600,
-              fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase',
-              color: s.prelaunch ? 'var(--bg)' : s.open ? 'var(--green)' : 'var(--ink)',
-              background: s.prelaunch ? 'var(--accent)' : 'transparent',
-              padding: s.prelaunch ? '3px 10px' : 0, borderRadius: s.prelaunch ? 4 : 0,
-              whiteSpace: 'nowrap' }}>{s.label}</span>
+            <span style={{ fontFamily: "'Oswald',sans-serif", fontWeight: 600, fontSize: 12,
+              letterSpacing: '0.16em', textTransform: 'uppercase',
+              color: s.open ? 'var(--green)' : 'var(--ink)' }}>{s.label}</span>
             <span style={{ width: 1, height: 16, background: 'var(--line)' }} />
             <span style={{ fontFamily: "'Lora',serif", fontStyle: 'italic', fontSize: 14,
               color: 'var(--muted)' }}>{s.sub}</span>
@@ -255,9 +242,14 @@ function PriceLine({ name, qty, price }) {
 function Pairing() {
   return (
     <Section id="pairing">
-      <SectionTag num="02" label="The Pairing" />
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
+        flexWrap: 'wrap', gap: 24 }}>
+        <SectionTag num="02" label="The Pairing" />
+        <span style={{ fontFamily: "'Lora',serif", fontStyle: 'italic', fontSize: 16,
+          color: 'var(--muted)' }}>One recipe. One kind. Done right.</span>
+      </div>
       <Statement style={{ marginTop: 30, maxWidth: 820 }}>
-        One recipe. One kind. Done right.
+        One pairing, perfected. Rich and golden, met with cold and tart.
       </Statement>
 
       <div className="cl-two" style={{ display: 'grid', gridTemplateColumns: '1.05fr 0.95fr',

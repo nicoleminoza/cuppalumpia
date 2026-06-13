@@ -17,13 +17,15 @@ style is inlined. Just double-click `index.html` to open it locally (works on
 ## Notable behavior
 
 - **Live status** — reads the device clock. Before the launch
-  (June 27, 2026, 11:00 AM) the header/hero/stand show "Opening June 27"; on
+  (June 27, 2026, 11:00 AM) the header/hero/stand show "Stand opens June 27 & 28"; on
   launch day it switches automatically to the weekend 11–2 open / sold-out logic.
 - **Reservations** — fresh-fried (Half/Full Dozen + Pinoy Palmer) is weekend
-  pickup only, 11:00–1:30; the Frozen Dozen ($20) can be picked up any day with
-  the time confirmed by email. Catering is an email link
-  (catering@cuppalumpia.com). Mock only — no backend; the form shows a success
-  screen and collects payment at the stand.
+  pickup only, chosen from a dropdown of valid weekend dates (Sat/Sun, Jun 27 –
+  Sep 30, excluding the closed weekends Jul 4–5 & Aug 22–23). The Frozen Dozen
+  ($20) can be picked up any day from today through Sep 30 (closed weekends
+  blocked), defaulting to the next day, with the time confirmed by email.
+  Catering is an email link (catering@cuppalumpia.com). Mock only — no backend;
+  the form shows a success screen and collects payment at pickup.
 - **Tweaks panel** — toggle in the toolbar to flip Background (Optic / Ink /
   Kraft), Accent, Display font, Whitespace, and the hero tagline live.
 - **Directions** — `index.html?dir=white|ink|kraft` presets the theme; the
