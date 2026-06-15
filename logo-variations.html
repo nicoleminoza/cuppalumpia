@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cuppa Lumpia — Logo Variations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;500;600;700&family=Yellowtail&family=Oswald:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#1B1610;
+    --cream:#F4EFE3;
+    --gold:#E7A11D;
+    --leaf:#3C5A34;
+    --paper:#EDE6D7;
+    --paper-2:#E4DBC8;
+    --line:rgba(27,22,16,0.14);
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{ margin:0; background:var(--paper); color:var(--ink);
+    font-family:'Zilla Slab',serif; -webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(rgba(27,22,16,0.035) 1px, transparent 1px);
+    background-size:22px 22px; }
+
+  .wrap{ max-width:1120px; margin:0 auto; padding:0 28px; }
+
+  /* ── top bar ── */
+  header.bar{ display:flex; align-items:center; justify-content:space-between;
+    padding:22px 28px; max-width:1120px; margin:0 auto; }
+  .bar .mark{ display:flex; align-items:baseline; gap:10px; line-height:1; }
+  .bar .mark .c{ font-family:'Yellowtail',cursive; color:var(--gold); font-size:22px; transform:translateY(2px); }
+  .bar .mark .l{ font-family:'Zilla Slab',serif; font-weight:700; letter-spacing:0.01em; font-size:22px; }
+  .bar .tag{ font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+    letter-spacing:0.22em; font-size:12px; color:var(--leaf); }
+  .bar .guidelink{ display:inline-flex; align-items:center; gap:8px; text-decoration:none;
+    font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+    letter-spacing:0.18em; font-size:12px; color:var(--leaf);
+    padding:9px 15px; border:1px solid rgba(60,90,52,0.35); border-radius:999px;
+    white-space:nowrap; transition:background .15s, color .15s, border-color .15s; }
+  .bar .guidelink svg{ width:13px; height:13px; transition:transform .15s; }
+  .bar .guidelink:hover{ background:var(--leaf); color:var(--cream); border-color:var(--leaf); }
+  .bar .guidelink:hover svg{ transform:translateX(-2px); }
+
+  /* ── hero ── */
+  .hero{ padding:34px 0 18px; }
+  .hero .eyebrow{ font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+    letter-spacing:0.34em; font-size:13px; color:var(--gold); margin:0 0 14px; }
+  .hero h1{ font-family:'Zilla Slab',serif; font-weight:700; font-size:clamp(40px,7vw,78px);
+    line-height:0.98; letter-spacing:-0.01em; margin:0 0 18px; max-width:14ch; text-wrap:balance; }
+  .hero p{ font-size:clamp(17px,2.1vw,21px); line-height:1.5; max-width:60ch; margin:0;
+    color:rgba(27,22,16,0.78); }
+
+  /* ── featured panel ── */
+  .feature{ margin:30px 0 8px; border-radius:18px; overflow:hidden;
+    border:1px solid rgba(27,22,16,0.10); box-shadow:0 24px 60px -28px rgba(27,22,16,0.5); }
+  .feature img{ display:block; width:100%; height:auto; }
+
+  /* ── section heading ── */
+  .sechead{ display:flex; align-items:flex-end; justify-content:space-between; gap:24px;
+    margin:64px 0 22px; padding-bottom:14px; border-bottom:1px solid var(--line); }
+  .sechead h2{ font-family:'Zilla Slab',serif; font-weight:700; font-size:clamp(26px,3.4vw,36px);
+    margin:0; letter-spacing:-0.01em; }
+  .sechead span{ font-family:'Oswald',sans-serif; font-weight:500; text-transform:uppercase;
+    letter-spacing:0.2em; font-size:12px; color:rgba(27,22,16,0.55); white-space:nowrap; padding-bottom:4px; }
+
+  /* ── variants grid ── */
+  .grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:26px; }
+  .card{ display:flex; flex-direction:column; border-radius:16px; overflow:hidden;
+    background:#fff; border:1px solid rgba(27,22,16,0.10);
+    box-shadow:0 14px 34px -22px rgba(27,22,16,0.45); transition:transform .2s, box-shadow .2s; }
+  .card:hover{ transform:translateY(-4px); box-shadow:0 26px 50px -24px rgba(27,22,16,0.5); }
+  .card .panel{ position:relative; aspect-ratio:1.365/1; display:flex; align-items:center; justify-content:center; }
+  .card .panel img{ width:84%; height:auto; }
+  .panel.black{ background:#1B1610; }
+  .panel.leaf{ background:var(--leaf); }
+  .panel.alpha{
+    background-color:#2f2b26;
+    background-image:
+      linear-gradient(45deg,#262420 25%,transparent 25%,transparent 75%,#262420 75%),
+      linear-gradient(45deg,#262420 25%,transparent 25%,transparent 75%,#262420 75%);
+    background-size:34px 34px; background-position:0 0,17px 17px; }
+
+  .meta{ padding:18px 20px 20px; display:flex; flex-direction:column; gap:10px; }
+  .meta .name{ font-family:'Zilla Slab',serif; font-weight:700; font-size:20px; }
+  .meta .use{ font-size:15px; line-height:1.45; color:rgba(27,22,16,0.66); }
+  .meta .row{ display:flex; align-items:center; justify-content:space-between; gap:12px;
+    margin-top:2px; padding-top:12px; border-top:1px solid var(--line); }
+  .swatch{ display:flex; align-items:center; gap:9px; font-family:'Oswald',sans-serif;
+    font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:rgba(27,22,16,0.7); }
+  .swatch .chip{ width:18px; height:18px; border-radius:5px; border:1px solid rgba(27,22,16,0.18); }
+  .dl{ font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase;
+    letter-spacing:0.12em; font-size:12px; color:var(--ink); text-decoration:none;
+    display:inline-flex; align-items:center; gap:7px; padding:8px 13px; border-radius:999px;
+    background:var(--gold); transition:filter .15s; }
+  .dl:hover{ filter:brightness(1.06); }
+  .dl svg{ width:13px; height:13px; }
+
+  /* ── palette strip ── */
+  .palette{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin-top:6px; }
+  .pal{ border-radius:12px; padding:16px; min-height:108px; display:flex; flex-direction:column; justify-content:flex-end;
+    border:1px solid rgba(27,22,16,0.10); }
+  .pal b{ font-family:'Oswald',sans-serif; font-weight:600; text-transform:uppercase; letter-spacing:0.14em; font-size:12px; }
+  .pal small{ font-family:'Oswald',sans-serif; letter-spacing:0.1em; font-size:12px; opacity:0.85; }
+
+  footer{ margin:70px 0 50px; padding-top:22px; border-top:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap;
+    font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:0.16em; text-transform:uppercase;
+    color:rgba(27,22,16,0.55); }
+
+  @media (max-width:560px){
+    header.bar{ padding:18px; }
+    .bar .tag{ display:none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="mark"><span class="c">Cuppa</span><span class="l">Lumpia</span></div>
+  <a class="guidelink" href="brand-guidelines.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+    Brand Guidelines
+  </a>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <p class="eyebrow">Logo · Identity</p>
+    <h1>The Cuppa Lumpia mark, three ways.</h1>
+    <p>One lockup — the steaming cup of lumpia above the wordmark — rendered for every surface it lands on. Pick the version that fits your background and keep the spacing intact.</p>
+
+    <div class="feature panel-feature">
+      <img src="Logo Exports/Cuppa Lumpia Logo - Black.png" alt="Cuppa Lumpia logo on black" />
+    </div>
+  </section>
+
+  <div class="sechead">
+    <h2>Variations</h2>
+    <span>PNG · 2888 × 2116 · transparent &amp; solid</span>
+  </div>
+
+  <section class="grid">
+
+    <article class="card">
+      <div class="panel alpha">
+        <img src="Logo Exports/Cuppa Lumpia Logo - Transparent.png" alt="Cuppa Lumpia logo, transparent background" />
+      </div>
+      <div class="meta">
+        <div class="name">Transparent</div>
+        <div class="use">No background — drops onto photos, dark headers, and packaging. Built with the cream wordmark, so reserve it for darker surfaces.</div>
+        <div class="row">
+          <div class="swatch"><span class="chip" style="background:conic-gradient(#ccc 0 25%,#fff 0 50%,#ccc 0 75%,#fff 0)"></span>Alpha PNG</div>
+          <a class="dl" href="Logo Exports/Cuppa Lumpia Logo - Transparent.png" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg>PNG</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="panel black">
+        <img src="Logo Exports/Cuppa Lumpia Logo - Black.png" alt="Cuppa Lumpia logo on black" />
+      </div>
+      <div class="meta">
+        <div class="name">Black</div>
+        <div class="use">The primary lockup. Maximum contrast for signage, menus, merch, and social avatars where a solid field reads best.</div>
+        <div class="row">
+          <div class="swatch"><span class="chip" style="background:#1B1610"></span>#1B1610</div>
+          <a class="dl" href="Logo Exports/Cuppa Lumpia Logo - Black.png" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg>PNG</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="panel leaf">
+        <img src="Logo Exports/Cuppa Lumpia Logo - Banana Leaf.png" alt="Cuppa Lumpia logo on banana leaf green" />
+      </div>
+      <div class="meta">
+        <div class="name">Banana Leaf</div>
+        <div class="use">The warm signature colorway — gold script, cream wordmark and tagline against the deep banana-leaf green.</div>
+        <div class="row">
+          <div class="swatch"><span class="chip" style="background:var(--leaf)"></span>#3C5A34</div>
+          <a class="dl" href="Logo Exports/Cuppa Lumpia Logo - Banana Leaf.png" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg>PNG</a>
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+  <div class="sechead">
+    <h2>Palette</h2>
+    <span>Core brand colors</span>
+  </div>
+
+  <section class="palette">
+    <div class="pal" style="background:var(--gold);color:#2a1d05"><b>Mango Gold</b><small>#E7A11D</small></div>
+    <div class="pal" style="background:var(--cream);color:#5b5446"><b>Cream</b><small>#F4EFE3</small></div>
+    <div class="pal" style="background:var(--leaf);color:#dfe7d8"><b>Banana Leaf</b><small>#3C5A34</small></div>
+    <div class="pal" style="background:var(--ink);color:#cfc6b6"><b>Ink</b><small>#1B1610</small></div>
+  </section>
+
+  <footer>
+    <span>Cuppa Lumpia · Filipino Family Recipe</span>
+    <span>Logo Variations</span>
+  </footer>
+
+</main>
+
+</body>
+</html>
