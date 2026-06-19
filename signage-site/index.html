@@ -1,1 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cuppa Lumpia Signage Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Yellowtail&family=Zilla+Slab:wght@500;600;700&family=Oswald:wght@400;500;600;700&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+<style>
+  :root{ --gold:#E7A11D; --esp:#241606; --espbg:#141009; --cream:#F4EFE3; --deep:#6e4d12; --sub:#a4937b; }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ background:#0c0905; min-height:100vh; font-family:'Lora',serif; color:#cdbfa6;
+    padding:46px 32px 90px; }
+  .wrap{ max-width:1200px; margin:0 auto; }
+  h1{ font-family:'Zilla Slab',serif; font-weight:700; font-size:32px; color:var(--cream); letter-spacing:-0.01em; }
+  .lede{ font-size:16px; line-height:1.6; color:#9b8d76; margin:10px 0 0; max-width:720px; }
 
+  .zone{ display:flex; align-items:baseline; gap:14px; margin:54px 0 6px; }
+  .zk{ font-family:'Oswald',sans-serif; font-weight:700; font-size:13px; letter-spacing:0.2em;
+    text-transform:uppercase; color:var(--gold); background:rgba(231,161,29,0.12);
+    border:1px solid rgba(231,161,29,0.4); border-radius:4px; padding:5px 11px; white-space:nowrap; }
+  .zt{ font-family:'Zilla Slab',serif; font-weight:700; font-size:22px; color:var(--cream); }
+  .zd{ font-family:'Lora',serif; font-style:italic; font-size:15px; color:#8a7c66; }
+  .zone-line{ height:1px; background:rgba(244,239,227,0.12); margin:14px 0 24px; }
+
+  .row{ display:flex; flex-wrap:wrap; gap:26px; align-items:flex-start; }
+  .mapcard{ background:#15100a; border:1px solid rgba(244,239,227,0.10); border-radius:12px; padding:26px 30px; }
+  .mapcard svg{ width:100%; height:auto; display:block; }
+  .mapnote{ font-family:'Lora',serif; font-size:14px; line-height:1.6; color:#8a7c66; margin-top:16px; }
+  .mapnote b{ color:#bcae96; font-weight:600; }
+  .item{ display:flex; flex-direction:column; gap:9px; }
+  .tag{ font-family:'Oswald',sans-serif; font-weight:600; font-size:11px; letter-spacing:0.16em;
+    text-transform:uppercase; color:#7d7059; }
+  .scaler{ position:relative; }
+
+  /* gold field shared */
+  .gsign{ background:var(--gold); color:var(--esp); position:relative; overflow:hidden; }
+  .gsign::after{ content:''; position:absolute; inset:13px; border:2px solid rgba(36,22,6,0.30); border-radius:5px; pointer-events:none; }
+  .wm{ display:flex; align-items:baseline; gap:13px; justify-content:center; }
+  .wm .c{ font-family:'Yellowtail',cursive; font-size:30px; color:var(--esp); transform:rotate(-4deg); line-height:1; }
+  .wm .l{ font-family:'Zilla Slab',serif; font-weight:700; font-size:34px; letter-spacing:0.01em; color:var(--esp); }
+
+  /* bird-dog 560×420 */
+  .bd{ width:560px; height:420px; display:flex; flex-direction:column; align-items:center;
+    justify-content:center; gap:26px; padding:50px 46px; text-align:center; }
+  .bd .arrow{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; width:100%; }
+  .bd .arrow svg{ width:238px; height:132px; }
+  .bd .msg{ font-family:'Zilla Slab',serif; font-weight:700; font-size:40px; line-height:1.0;
+    text-transform:uppercase; }
+  .bd .msg .em{ color:var(--espbg); }
+  .hook{ font-family:'Zilla Slab',serif; font-weight:700; font-size:35px; line-height:1;
+    text-transform:uppercase; letter-spacing:0.06em; color:var(--esp); }
+  .dir{ font-family:'Zilla Slab',serif; font-weight:700; font-size:35px; line-height:1.08;
+    text-transform:uppercase; letter-spacing:0.06em; color:var(--esp); }
+  .dir .em{ color:var(--esp); }
+  .bd .pre{ font-family:'Oswald',sans-serif; font-weight:700; font-size:20px; letter-spacing:0.16em;
+    text-transform:uppercase; color:var(--esp); margin-bottom:4px; }
+
+  /* awareness (text-only) bird-dog */
+  .aw{ justify-content:center; gap:22px; }
+  .aw .big{ font-family:'Zilla Slab',serif; font-weight:700; font-size:50px; line-height:1.04; text-transform:uppercase; }
+  /* the hook — keyword + distance anchor, vertically centered */
+  .hookbd{ gap:24px; }
+  .hookbd .big{ font-family:'Zilla Slab',serif; font-weight:700; font-size:62px; line-height:0.98; text-transform:uppercase; letter-spacing:0.02em; color:var(--esp); }
+  .hookbd .dist{ font-family:'Zilla Slab',serif; font-weight:700; font-size:44px; line-height:1; text-transform:uppercase; letter-spacing:0.03em; color:var(--esp); }
+
+  /* a-frame panel 480×720 */
+  .panel{ width:480px; height:720px; display:flex; flex-direction:column; }
+  .panel .cap{ background:var(--espbg); display:flex; align-items:center; justify-content:center; padding:24px 30px; }
+  .panel .cap img{ width:228px; height:auto; display:block; filter:drop-shadow(0 6px 16px rgba(0,0,0,0.4)); }
+  .panel .body{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:28px 32px; }
+  .panel .big{ font-family:'Zilla Slab',serif; font-weight:700; font-size:72px; line-height:0.92; text-transform:uppercase; }
+  .panel .sub{ font-family:'Oswald',sans-serif; font-weight:700; font-size:19px; letter-spacing:0.16em; text-transform:uppercase; color:var(--esp); margin-top:14px; }
+  .panel .hrs{ font-family:'Zilla Slab',serif; font-weight:600; font-size:30px; margin-top:18px; }
+  .panel .ital{ font-family:'Oswald',sans-serif; font-weight:500; font-style:normal; font-size:13.5px; letter-spacing:0.18em; text-transform:uppercase; color:var(--deep); margin-top:13px; }
+  /* Side B (frozen) informational trio: geometric, opened up, shifted down */
+  .panel .body.frozen{ justify-content:flex-start; padding-top:96px; }
+  .panel .body.frozen .sub{ margin-top:40px; }
+  .panel .midline{ font-family:'Oswald',sans-serif; font-weight:700; font-size:25px; letter-spacing:0.13em; text-transform:uppercase; color:var(--esp); margin-top:26px; }
+  .panel .body.frozen .ital{ margin-top:26px; }
+  .panel .foot{ background:var(--espbg); color:var(--cream); display:flex; align-items:center; justify-content:center; gap:15px; padding:22px 30px 40px; }
+  .panel .foot .txt{ text-align:left; }
+  .panel .foot .t1{ font-family:'Oswald',sans-serif; font-weight:700; font-size:13px; letter-spacing:0.1em; text-transform:uppercase; line-height:1.3; }
+  .panel .foot .t2{ font-family:'Oswald',sans-serif; font-weight:600; font-size:13px; letter-spacing:0.04em; text-transform:uppercase; color:var(--gold); margin-top:5px; }
+
+  /* big stand sign 1000×750 */
+  .sign{ width:1000px; height:750px; display:flex; flex-direction:column; overflow:hidden; position:relative; background:var(--gold); color:var(--esp); }
+  .sign::after{ content:''; position:absolute; inset:0; border:1px solid rgba(0,0,0,0.25); pointer-events:none; }
+  .brand{ display:flex; align-items:center; gap:40px; padding:42px 58px 34px; background:var(--espbg); }
+  .brand img{ width:330px; height:auto; flex:0 0 auto; filter:drop-shadow(0 8px 20px rgba(0,0,0,0.45)); }
+  .ft{ font-family:'Zilla Slab',serif; font-weight:700; font-size:38px; line-height:1.05; color:var(--cream); }
+  .eb{ font-family:'Oswald',sans-serif; font-weight:600; font-size:16px; letter-spacing:0.20em; text-transform:uppercase; margin-top:14px; color:var(--gold); }
+  .openbar{ display:flex; align-items:center; justify-content:center; padding:26px 58px 16px; }
+  .openbar .ttl{ font-family:'Zilla Slab',serif; font-weight:700; font-size:60px; line-height:1; letter-spacing:0.03em; text-transform:uppercase; white-space:nowrap; color:var(--esp); }
+  .info{ display:flex; gap:46px; padding:18px 58px 4px; }
+  .info .offer{ flex:1; }
+  .info .vr{ width:1px; align-self:stretch; background:rgba(36,22,6,0.28); }
+  .ol{ font-family:'Oswald',sans-serif; font-weight:700; font-size:14px; letter-spacing:0.2em; text-transform:uppercase; color:#7a5310; }
+  .od{ font-family:'Zilla Slab',serif; font-weight:600; font-size:30px; margin-top:7px; line-height:1.04; color:var(--esp); }
+  .ot{ font-family:'Lora',serif; font-style:italic; font-size:20px; margin-top:5px; color:var(--deep); }
+  .menuwrap{ flex:1; display:flex; flex-direction:column; justify-content:center; padding:14px 60px; }
+  .mhead{ font-family:'Oswald',sans-serif; font-weight:700; font-size:15px; letter-spacing:0.26em; text-transform:uppercase; color:var(--deep); text-align:center; margin-bottom:4px; }
+  .mrow{ display:flex; align-items:baseline; gap:16px; padding:12px 0; border-bottom:1px solid rgba(36,22,6,0.20); }
+  .mrow:last-of-type{ border-bottom:none; }
+  .mname{ font-family:'Zilla Slab',serif; font-weight:700; font-size:33px; line-height:1; color:var(--esp); white-space:nowrap; }
+  .mqty{ font-family:'Oswald',sans-serif; font-weight:600; font-size:13px; letter-spacing:0.06em; text-transform:uppercase; color:var(--deep); white-space:nowrap; }
+  .mlead{ flex:1; border-bottom:2px dotted rgba(36,22,6,0.4); transform:translateY(-7px); min-width:24px; }
+  .mprice{ font-family:'Zilla Slab',serif; font-weight:700; font-size:33px; color:var(--esp); white-space:nowrap; }
+  .mnote{ font-family:'Lora',serif; font-style:italic; font-size:16px; color:var(--deep); text-align:center; margin-top:12px; }
+  .hrs2{ font-family:'Zilla Slab',serif; font-weight:600; font-size:26px; color:var(--cream); }
+  .hrs2 span{ color:var(--gold); }
+  .hrs2 small{ display:block; font-family:'Lora',serif; font-style:italic; font-weight:400; font-size:15px; color:var(--sub); margin-top:3px; }
+  .foot{ margin-top:auto; display:flex; align-items:center; justify-content:space-between; gap:30px; padding:22px 58px 42px; background:var(--espbg); color:var(--cream); }
+  .addr{ display:flex; align-items:center; gap:14px; }
+  .lab{ font-family:'Oswald',sans-serif; font-weight:600; font-size:12px; letter-spacing:0.22em; text-transform:uppercase; color:var(--sub); }
+  .line{ font-family:'Zilla Slab',serif; font-weight:700; font-size:26px; margin-top:3px; line-height:1.18; max-width:330px; color:var(--cream); }
+  .pin{ stroke:var(--gold); fill:var(--gold); }
+  .scan{ display:flex; align-items:center; gap:16px; }
+  .scan .txt{ text-align:right; white-space:nowrap; }
+  .scan .t1{ font-family:'Oswald',sans-serif; font-weight:700; font-size:14px; letter-spacing:0.12em; text-transform:uppercase; line-height:1.3; color:var(--cream); }
+  .scan .t2{ font-family:'Oswald',sans-serif; font-weight:600; font-size:15px; letter-spacing:0.05em; text-transform:uppercase; color:var(--gold); margin-top:6px; }
+  .qrplate{ background:#F1E8D6; padding:10px; border-radius:11px; line-height:0; }
+  .qrplate canvas{ display:block; border-radius:5px; }
+
+  .note{ font-size:14px; line-height:1.6; color:#8a7c66; margin-top:14px; max-width:660px; }
+  .note b{ color:#bcae96; font-weight:600; }
+
+  /* counter card 500×700 (5×7) */
+  .csign{ width:500px; height:700px; display:flex; flex-direction:column; background:var(--gold); color:var(--esp); position:relative; overflow:hidden; }
+  .csign::after{ content:''; position:absolute; inset:0; border:1px solid rgba(0,0,0,0.22); pointer-events:none; }
+  .csign .keyline{ position:absolute; inset:18px; border:1.5px solid rgba(36,22,6,0.30); border-radius:6px; pointer-events:none; }
+  .csign .cta{ background:var(--espbg); color:var(--cream); text-align:center; padding:34px 36px 30px; }
+  .csign .ck{ font-family:'Oswald',sans-serif; font-weight:600; font-size:13px; letter-spacing:0.26em; text-transform:uppercase; color:var(--gold); }
+  .csign .ch{ font-family:'Zilla Slab',serif; font-weight:700; font-size:46px; line-height:0.98; text-transform:uppercase; margin-top:12px; color:var(--cream); }
+  .csign .cstage{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; padding:30px 36px 8px; }
+  .csign .cqr{ background:#fff; padding:18px; border-radius:14px; line-height:0; box-shadow:0 12px 30px rgba(36,22,6,0.30); }
+  .csign .cpay{ font-family:'Lora',serif; font-style:italic; font-size:19px; color:var(--esp); text-align:center; }
+  .csign .cfoot{ text-align:center; padding:30px 36px 38px; }
+  .csign .clock{ display:flex; flex-direction:column; align-items:center; line-height:0.8; }
+  .csign .clock .c{ font-family:'Yellowtail',cursive; font-size:30px; transform:rotate(-3deg); color:var(--esp); margin-left:0.12em; }
+  .csign .clock .l{ font-family:'Zilla Slab',serif; font-weight:700; letter-spacing:0.02em; font-size:48px; color:var(--esp); margin-top:3px; }
+  .csign .curl{ font-family:'Oswald',sans-serif; font-weight:600; font-size:15px; letter-spacing:0.14em; text-transform:uppercase; color:var(--espbg); margin-top:20px; border-top:1px solid rgba(36,22,6,0.28); padding-top:18px; display:inline-block; }
+
+  /* version tabs */
+  .vtabs{ display:flex; flex-wrap:wrap; gap:8px; margin:0 0 22px; }
+  .vtabs button{ font-family:'Oswald',sans-serif; font-weight:600; font-size:11px; letter-spacing:0.14em;
+    text-transform:uppercase; cursor:pointer; padding:8px 14px; border:1px solid rgba(244,239,227,0.18);
+    background:transparent; color:var(--cream); border-radius:7px; transition:all .18s; }
+  .vtabs button:hover{ border-color:var(--gold); color:var(--gold); }
+  .vtabs button.on{ background:var(--gold); border-color:var(--gold); color:#241606; }
+
+  /* strategy annotation */
+  .strat{ display:grid; grid-template-columns:1fr 1fr; gap:28px 44px; margin:24px 0 6px; max-width:1000px;
+    background:#15100a; border:1px solid rgba(244,239,227,0.10); border-radius:12px; padding:28px 32px; }
+  .strat .slab{ font-family:'Oswald',sans-serif; font-weight:700; font-size:12px; letter-spacing:0.2em;
+    text-transform:uppercase; color:var(--gold); margin-bottom:11px; }
+  .strat p{ font-family:'Lora',serif; font-size:14.5px; line-height:1.65; color:#9b8d76; }
+  .strat b{ color:#cdbfa6; font-weight:600; }
+  .strat i{ color:#bcae96; font-style:italic; }
+  .strat ul{ list-style:none; display:flex; flex-direction:column; gap:11px; }
+  .strat li{ font-family:'Lora',serif; font-size:14px; line-height:1.55; color:#9b8d76; padding-left:18px; position:relative; }
+  .strat li::before{ content:''; position:absolute; left:0; top:8px; width:6px; height:6px; background:var(--gold); border-radius:50%; }
+  .strat .span{ grid-column:1 / -1; border-top:1px solid rgba(244,239,227,0.10); padding-top:16px; }
+  .strat .span p{ font-style:italic; color:#8a7c66; }
+  @media (max-width:720px){ .strat{ grid-template-columns:1fr; gap:22px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Cuppa Lumpia Signage Plan</h1>
+  <p class="lede">Every sign, in the order a customer meets it: awareness out on the road → directional
+  arrows near the turn → sandwich boards at the driveway → the full sign at the stand → an order-ahead
+  card at the register that turns the visit into the next scan. One gold look the whole way, so the trail
+  feels connected.</p>
+
+  <div class="zone"><span class="zk">Map</span><span class="zt">Placement</span><span class="zd">the three drop points, by distance to the Lovgreen turn</span></div>
+  <div class="zone-line"></div>
+  <div class="mapcard">
+    <svg viewBox="0 0 1100 500" xmlns="http://www.w3.org/2000/svg" font-family="Oswald, sans-serif">
+      <!-- WA-305 diagonal arterial, far west -->
+      <line x1="60" y1="120" x2="210" y2="430" stroke="#372c1b" stroke-width="26"/>
+      <!-- NE Lovgreen Rd, west→east -->
+      <line x1="120" y1="250" x2="850" y2="250" stroke="#372c1b" stroke-width="30"/>
+      <!-- N Madison Ave NE, the eastern arterial -->
+      <line x1="850" y1="45" x2="850" y2="465" stroke="#372c1b" stroke-width="30"/>
+      <!-- subtle side-street stubs off Lovgreen (Carole / Charles / Viewcrest) -->
+      <line x1="300" y1="250" x2="300" y2="212" stroke="#2a2114" stroke-width="9"/>
+      <line x1="430" y1="250" x2="430" y2="212" stroke="#2a2114" stroke-width="9"/>
+      <line x1="640" y1="250" x2="640" y2="212" stroke="#2a2114" stroke-width="9"/>
+
+      <!-- the route a customer drives: down Madison, west on Lovgreen, to the stand -->
+      <line x1="850" y1="80" x2="850" y2="250" stroke="#E7A11D" stroke-width="2.5" stroke-dasharray="14 12"/>
+      <line x1="850" y1="420" x2="850" y2="250" stroke="#E7A11D" stroke-width="2.5" stroke-dasharray="14 12"/>
+      <line x1="850" y1="250" x2="160" y2="250" stroke="#E7A11D" stroke-width="2.5" stroke-dasharray="14 12"/>
+
+      <!-- traffic arrows on Madison, both directions converging on the turn -->
+      <path d="M834 60 L850 86 L866 60 Z" fill="#F4EFE3"/>
+      <text x="850" y="40" fill="#a4937b" font-size="13" letter-spacing="2" text-anchor="middle">TRAFFIC</text>
+      <path d="M834 452 L850 426 L866 452 Z" fill="#F4EFE3"/>
+      <text x="850" y="488" fill="#a4937b" font-size="13" letter-spacing="2" text-anchor="middle">TRAFFIC</text>
+
+      <!-- road labels -->
+      <text x="470" y="240" fill="#d8cdba" font-size="17" font-weight="600" text-anchor="middle">NE Lovgreen Rd</text>
+      <text x="884" y="180" fill="#d8cdba" font-size="17" font-weight="600" transform="rotate(90 884 180)" text-anchor="middle">N Madison Ave NE</text>
+
+      <!-- WA-305 shield, far west -->
+      <rect x="96" y="158" width="40" height="30" rx="5" fill="#E7A11D"/>
+      <text x="116" y="180" fill="#241606" font-size="17" font-weight="700" text-anchor="middle">305</text>
+      <text x="116" y="138" fill="#a4937b" font-size="13" letter-spacing="1.5" text-anchor="middle">HWY 305</text>
+
+      <!-- eastbound traffic turning off 305 onto Lovgreen -->
+      <path d="M150 234 L176 250 L150 266 Z" fill="#F4EFE3"/>
+      <text x="150" y="233" fill="#a4937b" font-size="13" letter-spacing="2">FROM 305 →</text>
+      <!-- Sign 1 · The Hook · eastbound, at the 305 corner -->
+      <circle cx="255" cy="250" r="14" fill="#E7A11D" stroke="#15100a" stroke-width="3"/>
+      <text x="255" y="256" fill="#241606" font-size="16" font-weight="700" text-anchor="middle">1</text>
+      <text x="255" y="300" fill="#F4EFE3" font-size="15" font-weight="700" text-anchor="middle">THE HOOK</text>
+      <text x="255" y="320" fill="#a4937b" font-size="13" text-anchor="middle">at the 305 corner, facing east</text>
+
+      <!-- Sign 1 · The Hook · ¼ mi north & south on Madison -->
+      <circle cx="850" cy="110" r="14" fill="#E7A11D" stroke="#15100a" stroke-width="3"/>
+      <text x="850" y="116" fill="#241606" font-size="16" font-weight="700" text-anchor="middle">1</text>
+      <text x="822" y="105" fill="#F4EFE3" font-size="15" font-weight="700" text-anchor="end">THE HOOK</text>
+      <text x="822" y="125" fill="#a4937b" font-size="13" text-anchor="end">≈ ¼ mi north on Madison</text>
+
+      <circle cx="850" cy="390" r="14" fill="#E7A11D" stroke="#15100a" stroke-width="3"/>
+      <text x="850" y="396" fill="#241606" font-size="16" font-weight="700" text-anchor="middle">1</text>
+      <text x="822" y="385" fill="#F4EFE3" font-size="15" font-weight="700" text-anchor="end">THE HOOK</text>
+      <text x="822" y="405" fill="#a4937b" font-size="13" text-anchor="end">≈ ¼ mi south on Madison</text>
+
+      <!-- Sign 2 · The Action · just before the turn, both approaches -->
+      <circle cx="850" cy="178" r="14" fill="#E7A11D" stroke="#15100a" stroke-width="3"/>
+      <text x="850" y="184" fill="#241606" font-size="16" font-weight="700" text-anchor="middle">2</text>
+      <text x="822" y="173" fill="#F4EFE3" font-size="15" font-weight="700" text-anchor="end">THE ACTION</text>
+      <text x="822" y="193" fill="#a4937b" font-size="13" text-anchor="end">~350 ft before the turn</text>
+
+      <circle cx="850" cy="322" r="14" fill="#E7A11D" stroke="#15100a" stroke-width="3"/>
+      <text x="850" y="328" fill="#241606" font-size="16" font-weight="700" text-anchor="middle">2</text>
+      <text x="822" y="317" fill="#F4EFE3" font-size="15" font-weight="700" text-anchor="end">THE ACTION</text>
+      <text x="822" y="337" fill="#a4937b" font-size="13" text-anchor="end">~350 ft before the turn</text>
+
+      <!-- the turn -->
+      <text x="908" y="246" fill="#bcae96" font-size="13" font-weight="600" letter-spacing="1">MADISON &amp; LOVGREEN</text>
+      <text x="908" y="264" fill="#a4937b" font-size="13">the turn, head west</text>
+
+      <!-- Sign 3 · The Arrival, at the driveway -->
+      <circle cx="560" cy="250" r="14" fill="#E7A11D" stroke="#15100a" stroke-width="3"/>
+      <text x="560" y="256" fill="#241606" font-size="16" font-weight="700" text-anchor="middle">3</text>
+      <text x="560" y="200" fill="#F4EFE3" font-size="15" font-weight="700" text-anchor="middle">THE ARRIVAL</text>
+      <text x="560" y="220" fill="#a4937b" font-size="13" text-anchor="middle">driveway sign + feather flag</text>
+
+      <!-- The Stand, the house set back south of the road -->
+      <rect x="540" y="300" width="42" height="30" rx="5" fill="#E7A11D"/>
+      <text x="561" y="368" fill="#E7A11D" font-size="16" font-weight="700" text-anchor="middle">THE STAND</text>
+      <text x="561" y="388" fill="#a4937b" font-size="13" text-anchor="middle">9251 NE Lovgreen Rd</text>
+    </svg>
+    <p class="mapnote"><b>The real run:</b> Madison Ave is the arterial, so drivers come from the north and south, so <b>The Hook</b> goes ≈¼ mile out in each direction, <b>The Action</b> ~350 ft before the Madison &amp; Lovgreen turn, then it’s <b>0.2 mi west</b> on Lovgreen to the driveway. <b>From 305:</b> eastbound drivers turn onto Lovgreen and head straight to you (no second turn) for <b>0.3 mi</b>. Put a <b>Hook right at the 305 corner</b> facing east, then the same Arrival at the driveway. <b>Confirm on-site:</b> walk the actual footage, and print directional art as explicit <b>Side A (northbound approach)</b> and <b>Side B (southbound approach)</b> panels. Don’t flip one piece of art, or a left arrow reads as a right when reversed.</p>
+  </div>
+
+  <div class="zone"><span class="zk">Sign 1</span><span class="zt">The Hook</span><span class="zd">≈ ¼ mile ahead: keyword + “ahead”; cues drivers to ease off the gas</span></div>
+  <div class="zone-line"></div>
+  <div class="row" id="z1"></div>
+  <div class="strat">
+    <div class="scol"><div class="slab">The goal</div>
+      <p>Buy <b>reaction time</b>. At highway speed a driver needs roughly a quarter-mile to read a word, register the craving, and ease off the gas. So this sign says <b>one thing</b>: the product and the distance, and nothing else. No menu, no logo fine print. Its only job is to plant <i>“lumpia, soon”</i> so the next sign can close it.</p></div>
+    <div class="scol"><div class="slab">How to display</div>
+      <ul>
+        <li><b>48 × 36″ coroplast</b> on an H-stake or twin steel stakes, driven into the shoulder.</li>
+        <li>Angle it <b>10–15° toward oncoming traffic</b>, not flat to the road, so it faces the windshield, not the passing door.</li>
+        <li>Print <b>Side A and Side B as separate panels</b>, one per approach direction.</li>
+      </ul></div>
+  </div>
+
+  <div class="zone"><span class="zk">Sign 2</span><span class="zt">The Action</span><span class="zd">300–400 ft before the turn: explicit street name + arrow to signal &amp; merge</span></div>
+  <div class="zone-line"></div>
+  <div class="row" id="z2"></div>
+  <div class="strat">
+    <div class="scol"><div class="slab">The goal</div>
+      <p>Convert the primed driver into a <b>turn</b>. This is the commitment point: an explicit <b>street name</b> and a <b>single, unmistakable arrow</b>. Hesitation here means a missed turn, so it answers <i>where</i> early enough for them to signal and slow before the merge.</p></div>
+    <div class="scol"><div class="slab">How to display</div>
+      <ul>
+        <li>Same <b>48 × 36″ coroplast</b>, placed <b>~350 ft before</b> the Madison &amp; Lovgreen turn.</li>
+        <li>Arrow direction is everything, so mount <b>two single-sided panels back-to-back</b>, never one flipped file, so left/right reads correctly from each direction.</li>
+      </ul></div>
+  </div>
+
+  <div class="zone"><span class="zk">Sign 3</span><span class="zt">The Arrival</span><span class="zd">at the entrance/driveway — full logo, welcome &amp; details (sandwich boards + gold feather flag)</span></div>
+  <div class="zone-line"></div>
+  <div class="row" id="z3"></div>
+  <div class="strat">
+    <div class="scol"><div class="slab">The goal</div>
+      <p>Mark the doorway and answer the last three questions: <i>open? what? when?</i> The feather flag is the beacon: its vertical motion is the one thing that reliably reads <b>“pull in HERE”</b> to a driver scanning a rural shoulder. The A-frame then delivers the welcome and the proof.</p></div>
+    <div class="scol"><div class="slab">How to display</div>
+      <ul>
+        <li><b>24 × 36″ A-frame</b> set <b>parallel to the shoulder</b> at the driveway mouth, two-sided by nature, so it works both directions.</li>
+        <li>Pair it with a <b>2.5 × 11 ft gold feather flag</b>. The flag catches the eye from down the road; the board closes the decision at the turn-in.</li>
+      </ul></div>
+  </div>
+
+  <div class="zone"><span class="zk">At stand</span><span class="zt">The Menu</span><span class="zd">the experience continues: order-ahead QR</span></div>
+  <div class="zone-line"></div>
+  <div class="row" id="z4"></div>
+  <div class="strat">
+    <div class="scol"><div class="slab">The goal</div>
+      <p>Prime the line and <b>speed every transaction</b>. By the time a guest reaches the counter they should already know their order. So the board leads with a clean <b>item → quantity → price</b> hierarchy in type readable down the whole line, so fewer questions at the window, faster turns, a calmer counter.</p></div>
+    <div class="scol"><div class="slab">How to display: three options</div>
+      <ul>
+        <li><b>Tabletop easel</b> (wrought-iron or wide-base wood) on the counter, lifting the 24″ width ~6″ into direct line of sight and protected from foot traffic.</li>
+        <li><b>Canopy-frame mount</b>: zip-tie or clamp through the grommets to the upper bars or front leg of a 10 × 10 ft pop-up. Off the table, just above eye level, readable from 15 ft, and windproof.</li>
+        <li><b>Top-rider or small stand 5 ft ahead</b> of the counter, intercepting the waiting line and primes orders before guests reach you.</li>
+      </ul></div>
+    <div class="span"><p><b>Print matte or satin, never gloss.</b> Morning and afternoon sun on a glossy panel blows the prices out from key angles. A flat finish stays legible in any light.</p></div>
+  </div>
+
+  <div class="zone"><span class="zk">At counter</span><span class="zt">Order-Ahead Cards</span><span class="zd">tabletop 5 × 7″ by the register: one card per ask, swap by season</span></div>
+  <div class="zone-line"></div>
+  <div class="row" id="z5"></div>
+  <div class="strat">
+    <div class="scol"><div class="slab">The goal</div>
+      <p>Turn this visit into the <b>next one</b>. Payment is the highest-intent moment a guest will ever have with you, so capture it: a re-order, a drop-list signup, a frozen-dozen or catering lead. <b>One ask per card</b>, swapped to match the season: Order Ahead as the everyday default, Drop List into a sell-out weekend, Frozen for the off-season, Menu &amp; Hours at a pop-up or new spot.</p></div>
+    <div class="scol"><div class="slab">How to display</div>
+      <ul>
+        <li><b>5 × 7″</b> (or <b>4 × 6″</b>) in an <b>acrylic slant-back stand</b> at the register, beside the card reader.</li>
+        <li>Keep it <b>clear of the menu board</b> so the QR is the single obvious action at the point of sale: one scan, one job.</li>
+        <li>QR and the <b>cuppalumpia.com</b> baseline both resolve to the site, so a fumbled scan still finds you.</li>
+      </ul></div>
+  </div>
+
+  <p class="note"><b>Production:</b> all gold-forward to match. For the two directional signs, print <b>separate single-sided panels mounted back-to-back</b> (Side A northbound / Side B southbound) rather than one flipped double-sided file. This guarantees each arrow points correctly and avoids reversed-arrow errors. Sandwich boards are two-sided by nature. The stand sign carries the QR; road signs use the URL only.</p>
+  <p class="note"><b>Sizes:</b> Hook &amp; Action road panels <b>48 × 36″</b> (coroplast on an H-frame or two stakes); Arrival A-frames <b>24 × 36″</b> per side; <b>gold feather flag ≈ 2.5 × 11 ft</b> at the driveway; stand menu sign <b>24 × 18″</b>. Same big type and gold field across all road panels so they read as one trail.</p>
+</div>
+
+<script>
+  const A_RIGHT='<svg viewBox="0 0 120 80" fill="#241606"><path d="M0 28 H72 V10 L120 40 L72 70 V52 H0 Z"/></svg>';
+  const A_LEFT ='<svg viewBox="0 0 120 80" fill="#241606"><path d="M120 28 H48 V10 L0 40 L48 70 V52 H120 Z"/></svg>';
+  const A_TURNL='<svg viewBox="0 0 120 120" fill="#241606"><path d="M64 118 V60 H34 V76 L0 50 L34 24 V40 H84 V118 Z"/></svg>';
+  const A_TURNR='<svg viewBox="0 0 120 120" fill="#241606"><path d="M56 118 V60 H86 V76 L120 50 L86 24 V40 H36 V118 Z"/></svg>';
+
+  const wm = '<div class="wm"><span class="c">Cuppa</span><span class="l">LUMPIA</span></div>';
+
+  function bd(d){
+    return `<div class="item"><div class="tag">${d.tag}</div>
+      <div class="scaler" data-w="560" data-h="420" data-sc="${d.sc||0.5}">
+        <div class="gsign bd">${wm}<div class="arrow">${d.arrow}</div>
+          <div><div class="pre">${d.pre}</div><div class="msg">${d.msg}</div></div></div></div></div>`;
+  }
+  function aware(d){ return ''; }
+
+  function tease(d){
+    return `<div class="item"><div class="tag">${d.tag}</div>
+      <div class="scaler" data-w="560" data-h="420" data-sc="0.5">
+        <div class="gsign bd aw hookbd"><div class="big">${d.msg}</div><div class="dist">${d.dist}</div></div></div></div>`;
+  }
+  function bdClean(d){
+    return `<div class="item"><div class="tag">${d.tag}</div>
+      <div class="scaler" data-w="560" data-h="420" data-sc="0.5">
+        <div class="gsign bd"><div class="hook">Fresh Lumpia</div>
+          <div class="arrow">${d.arrow}</div>
+          <div class="dir">${d.msg}</div></div></div></div>`;
+  }
+
+  // Zone 1 — The Hook
+  switcher('z1', [
+    { btn:'Madison · ¼ mi', tag:'The Hook · 48 × 36″ · Madison approach, either direction', msg:'Lumpia<br>Ahead', dist:'¼ Mile' },
+    { btn:'From 305', tag:'The Hook · 48 × 36″ · 305 corner, facing east', msg:'Lumpia<br>Ahead', dist:'0.3 Mile' },
+  ], tease);
+
+  // Zone 2 — The Action (directional at the turn)
+  switcher('z2', [
+    { btn:'Side A · NB', tag:'The Turn · Side A · northbound · 48 × 36″', arrow:A_TURNL, msg:'Left on<br><span class="em">Lovgreen</span>' },
+    { btn:'Side B · SB', tag:'The Turn · Side B · southbound · 48 × 36″', arrow:A_TURNR, msg:'Right on<br><span class="em">Lovgreen</span>' },
+  ], bdClean);
+
+  // Zone 3 — sandwich boards
+  const PIN_S='<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 22s7-6.4 7-12a7 7 0 1 0-14 0c0 5.6 7 12 7 12Z" stroke="#E7A11D" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.6" fill="#E7A11D"/></svg>';
+  function panel(d){
+    const mid = d.frozen ? `<div class="midline">${d.hrs}</div>` : `<div class="hrs">${d.hrs}</div>`;
+    const bodyCls = d.frozen ? 'body frozen' : 'body';
+    return `<div class="item"><div class="tag">${d.tag}</div>
+      <div class="scaler" data-w="480" data-h="720" data-sc="0.46">
+        <div class="gsign panel">
+          <div class="cap"><img src="cl-hero-logo.png" alt="Cuppa Lumpia"></div>
+          <div class="${bodyCls}"><div class="big">${d.big}</div><div class="sub">${d.sub}</div>
+            ${mid}<div class="ital">${d.ital}</div></div>
+          <div class="foot"><div class="txt"><div class="t1">${d.t1}</div><div class="t2">cuppalumpia.com</div></div>
+            <div class="qrplate"><div class="qr" data-box="92"></div></div></div>
+        </div></div></div>`;
+  }
+  // Zone 3 — The Arrival (sandwich boards)
+  switcher('z3', [
+    { btn:'Side A · Open', tag:'Side A · A-frame 24 × 36″', big:'Open<br>Today', sub:'Fresh Lumpia · Fried to Order', hrs:'Sat &amp; Sun · 11–2', ital:'Until we sell out', t1:'Order ahead &amp; menu' },
+    { btn:'Side B · Frozen', tag:'Side B · A-frame 24 × 36″', big:'Frozen<br>&amp; Catering', sub:'Available Daily', hrs:'By the dozen · party trays', ital:'48-hr notice for catering', t1:'Order &amp; details', frozen:true },
+  ], panel);
+
+  // Zone 4 — the stand sign
+  document.getElementById('z4').innerHTML =
+    `<div class="item"><div class="tag">Stand sign · 24 × 18″ · menu</div>
+      <div class="scaler" data-w="1000" data-h="750" data-sc="0.62">
+        <div class="sign">
+          <div class="brand"><img src="cl-hero-logo.png" alt="Cuppa Lumpia">
+            <div><div class="ft">Crispy Filipino<br>Spring Rolls</div><div class="eb">Family Recipe · Fried Fresh to Order</div></div></div>
+          <div class="menuwrap"><div class="mhead">The Menu</div>
+            <div class="mrow"><span class="mname">Half Dozen</span><span class="mqty">6 pcs · fresh-fried</span><span class="mlead"></span><span class="mprice">$15</span></div>
+            <div class="mrow"><span class="mname">Full Dozen</span><span class="mqty">12 pcs · fresh-fried</span><span class="mlead"></span><span class="mprice">$25</span></div>
+            <div class="mrow"><span class="mname">Frozen Dozen</span><span class="mqty">fry at home · any day</span><span class="mlead"></span><span class="mprice">$20</span></div>
+            <div class="mrow"><span class="mname">Catering Trays</span><span class="mqty">3 dozen min</span><span class="mlead"></span><span class="mprice">from $70</span></div>
+            <div class="mnote">Add a Pinoy Palmer (calamansi iced tea) +$5 · sauces: sweet chili or spiced vinegar</div></div>
+          <div class="foot"><div class="hrs2"><span>Sat &amp; Sun · 11–2</span><small>Fresh-fried until we sell out</small></div>
+            <div class="scan"><div class="txt"><div class="t1">Skip the line — order ahead</div><div class="t2">cuppalumpia.com</div></div><div class="qrplate"><div class="qr" data-box="112"></div></div></div></div>
+        </div></div></div>`;
+
+  document.querySelectorAll('#z4 .qr').forEach(makeQR);
+
+  // Zone 5 — counter order-ahead cards (5×7)
+  function csign(d){
+    return `<div class="item"><div class="tag">${d.tag}</div>
+      <div class="scaler" data-w="500" data-h="700" data-sc="0.34">
+        <div class="csign"><div class="keyline"></div>
+          <div class="cta"><div class="ck">${d.kicker}</div><div class="ch">${d.head}</div></div>
+          <div class="cstage"><div class="cqr"><div class="qr" data-box="150" data-bg="#ffffff"></div></div>
+            <div class="cpay">${d.payoff}</div></div>
+          <div class="cfoot"><div class="clock"><span class="c">Cuppa</span><span class="l">LUMPIA</span></div>
+            <div class="curl">cuppalumpia.com</div></div>
+        </div></div></div>`;
+  }
+  // Zone 5 — counter order-ahead cards
+  switcher('z5', [
+    { btn:'Order Ahead', tag:'Counter card · 5 × 7″ · Order Ahead', kicker:'Fried fresh to order', head:'Scan to<br>Order Ahead', payoff:'Beat the line next time. Order before you arrive.' },
+    { btn:'Drop List', tag:'Counter card · 5 × 7″ · Drop List', kicker:'Weekends 11–2 · til we sell out', head:'Join the<br>Drop List', payoff:'Be first to know when the batch drops.' },
+    { btn:'Frozen', tag:'Counter card · 5 × 7″ · Frozen', kicker:'Available now · fry at home', head:'Frozen by<br>the Dozen', payoff:'Take the crunch home, fry fresh anytime.' },
+    { btn:'Menu & Hours', tag:'Counter card · 5 × 7″ · Menu & Hours', kicker:'Family recipe · fried to order', head:'See the<br>Full Menu', payoff:'What’s frying this weekend, plus hours.' },
+  ], csign);
+
+  // QR + version-switcher helpers
+  function makeQR(el){
+    const box=+el.dataset.box||100, bg=el.dataset.bg||'#F1E8D6';
+    new QRCodeStyling({ width:box*3, height:box*3, type:'canvas', data:'https://cuppalumpia.com', margin:6,
+      qrOptions:{ errorCorrectionLevel:'H' }, dotsOptions:{ type:'rounded', color:'#2A1C12' },
+      backgroundOptions:{ color:bg }, cornersSquareOptions:{ type:'square', color:'#2A1C12' },
+      cornersDotOptions:{ type:'square', color:'#B27A12' }, image:'favicon-512.png',
+      imageOptions:{ hideBackgroundDots:true, imageSize:0.24, margin:6 } }).append(el);
+    el.style.width=box+'px'; el.style.height=box+'px';
+    const c=el.querySelector('canvas'); if(c){ c.style.width=box+'px'; c.style.height=box+'px'; }
+  }
+  function switcher(rowId, versions, renderFn){
+    const row=document.getElementById(rowId);
+    const tabs=document.createElement('div'); tabs.className='vtabs';
+    function show(i){
+      row.innerHTML=renderFn(versions[i]);
+      [...tabs.children].forEach((b,bi)=>b.classList.toggle('on',bi===i));
+      fit(); row.querySelectorAll('.qr').forEach(makeQR);
+    }
+    versions.forEach((v,i)=>{
+      const b=document.createElement('button'); b.innerHTML=v.btn;
+      b.addEventListener('click',()=>show(i)); tabs.appendChild(b);
+    });
+    row.parentNode.insertBefore(tabs,row);
+    show(0);
+  }
+
+  function fit(){
+    document.querySelectorAll('.scaler').forEach(s => {
+      const w=+s.dataset.w, h=+s.dataset.h, sc=+s.dataset.sc||0.5;
+      s.style.width=(w*sc)+'px'; s.style.height=(h*sc)+'px';
+      const sign=s.firstElementChild; sign.style.transformOrigin='top left'; sign.style.transform='scale('+sc+')';
+    });
+  }
+  fit();
+</script>
+</body>
+</html>
