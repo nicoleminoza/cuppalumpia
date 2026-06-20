@@ -6,7 +6,7 @@
 <title>Cuppa Lumpia Signage Plan</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Yellowtail&family=Zilla+Slab:wght@500;600;700&family=Oswald:wght@400;500;600;700&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Yellowtail&family=Zilla+Slab:wght@500;600;700&family=Oswald:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
 <style>
   :root{ --gold:#E7A11D; --esp:#241606; --espbg:#141009; --cream:#F4EFE3; --deep:#6e4d12; --sub:#a4937b; }
@@ -75,11 +75,14 @@
   .panel .sub{ font-family:'Oswald',sans-serif; font-weight:700; font-size:19px; letter-spacing:0.16em; text-transform:uppercase; color:var(--esp); margin-top:14px; }
   .panel .hrs{ font-family:'Zilla Slab',serif; font-weight:600; font-size:30px; margin-top:18px; }
   .panel .ital{ font-family:'Oswald',sans-serif; font-weight:500; font-style:normal; font-size:13.5px; letter-spacing:0.18em; text-transform:uppercase; color:var(--deep); margin-top:13px; }
-  /* Side B (frozen) informational trio: geometric, opened up, shifted down */
-  .panel .body.frozen{ justify-content:flex-start; padding-top:96px; }
-  .panel .body.frozen .sub{ margin-top:40px; }
-  .panel .midline{ font-family:'Oswald',sans-serif; font-weight:700; font-size:25px; letter-spacing:0.13em; text-transform:uppercase; color:var(--esp); margin-top:26px; }
-  .panel .body.frozen .ital{ margin-top:26px; }
+  /* Side B (frozen) informational trio: geometric, opened up, anchored low so the espresso footer + QR stay inside the 720px frame */
+  .panel .body.frozen{ justify-content:flex-end; padding-top:18px; padding-bottom:18px; }
+  .panel .body.frozen .big{ font-size:62px; }
+  .panel .body.frozen .sub{ margin-top:24px; }
+  /* compact footer on the frozen side so the QR clears the bottom edge */
+  .panel:has(.body.frozen) .foot{ padding:16px 30px 26px; }
+  .panel .midline{ font-family:'Oswald',sans-serif; font-weight:700; font-size:24px; letter-spacing:0.12em; text-transform:uppercase; color:var(--esp); line-height:1.12; margin-top:18px; }
+  .panel .body.frozen .ital{ margin-top:18px; }
   .panel .foot{ background:var(--espbg); color:var(--cream); display:flex; align-items:center; justify-content:center; gap:15px; padding:22px 30px 40px; }
   .panel .foot .txt{ text-align:left; }
   .panel .foot .t1{ font-family:'Oswald',sans-serif; font-weight:700; font-size:13px; letter-spacing:0.1em; text-transform:uppercase; line-height:1.3; }
@@ -100,7 +103,7 @@
   .ol{ font-family:'Oswald',sans-serif; font-weight:700; font-size:14px; letter-spacing:0.2em; text-transform:uppercase; color:#7a5310; }
   .od{ font-family:'Zilla Slab',serif; font-weight:600; font-size:30px; margin-top:7px; line-height:1.04; color:var(--esp); }
   .ot{ font-family:'Lora',serif; font-style:italic; font-size:20px; margin-top:5px; color:var(--deep); }
-  .menuwrap{ flex:1; display:flex; flex-direction:column; justify-content:center; padding:14px 60px; }
+  .menuwrap{ flex:1; display:flex; flex-direction:column; justify-content:center; padding:14px 84px 14px 60px; }
   .mhead{ font-family:'Oswald',sans-serif; font-weight:700; font-size:15px; letter-spacing:0.26em; text-transform:uppercase; color:var(--deep); text-align:center; margin-bottom:4px; }
   .mrow{ display:flex; align-items:baseline; gap:16px; padding:12px 0; border-bottom:1px solid rgba(36,22,6,0.20); }
   .mrow:last-of-type{ border-bottom:none; }
@@ -111,8 +114,16 @@
   .mnote{ font-family:'Lora',serif; font-style:italic; font-size:16px; color:var(--deep); text-align:center; margin-top:12px; }
   .hrs2{ font-family:'Zilla Slab',serif; font-weight:600; font-size:26px; color:var(--cream); }
   .hrs2 span{ color:var(--gold); }
-  .hrs2 small{ display:block; font-family:'Lora',serif; font-style:italic; font-weight:400; font-size:15px; color:var(--sub); margin-top:3px; }
-  .foot{ margin-top:auto; display:flex; align-items:center; justify-content:space-between; gap:30px; padding:22px 58px 42px; background:var(--espbg); color:var(--cream); }
+  .hrs2 small{ display:block; font-family:'Lora',serif; font-style:italic; font-weight:500; font-size:16px; color:#d8cdba; margin-top:4px; }
+  .foot{ margin-top:auto; display:flex; align-items:center; justify-content:space-between; gap:30px; padding:26px 84px 54px 58px; background:var(--espbg); color:var(--cream); }
+  /* lightened foot — slimmer band, smaller QR, less dark mass */
+  .foot.light{ padding:16px 84px 31px 58px; gap:24px; }
+  .foot.light .hrs2{ font-size:23px; }
+  .foot.light .hrs2 small{ font-size:14px; margin-top:3px; }
+  .foot.light .scan{ gap:13px; }
+  .foot.light .scan .t1{ font-size:12.5px; }
+  .foot.light .scan .t2{ font-size:13.5px; margin-top:4px; }
+  .foot.light .qrplate{ padding:7px; }
   .addr{ display:flex; align-items:center; gap:14px; }
   .lab{ font-family:'Oswald',sans-serif; font-weight:600; font-size:12px; letter-spacing:0.22em; text-transform:uppercase; color:var(--sub); }
   .line{ font-family:'Zilla Slab',serif; font-weight:700; font-size:26px; margin-top:3px; line-height:1.18; max-width:330px; color:var(--cream); }
@@ -385,7 +396,7 @@
           <div class="${bodyCls}"><div class="big">${d.big}</div><div class="sub">${d.sub}</div>
             ${mid}<div class="ital">${d.ital}</div></div>
           <div class="foot"><div class="txt"><div class="t1">${d.t1}</div><div class="t2">cuppalumpia.com</div></div>
-            <div class="qrplate"><div class="qr" data-box="92"></div></div></div>
+            <div class="qrplate"><div class="qr" data-box="${d.frozen?78:92}"></div></div></div>
         </div></div></div>`;
   }
   // Zone 3 — The Arrival (sandwich boards)
@@ -394,7 +405,7 @@
     { btn:'Side B · Frozen', tag:'Side B · A-frame 24 × 36″', big:'Frozen<br>&amp; Catering', sub:'Available Daily', hrs:'By the dozen · party trays', ital:'48-hr notice for catering', t1:'Order &amp; details', frozen:true },
   ], panel);
 
-  // Zone 4 — the stand sign
+  // Zone 4 — the stand sign (lightened foot band, locked in)
   document.getElementById('z4').innerHTML =
     `<div class="item"><div class="tag">Stand sign · 24 × 18″ · menu</div>
       <div class="scaler" data-w="1000" data-h="750" data-sc="0.62">
@@ -407,8 +418,8 @@
             <div class="mrow"><span class="mname">Frozen Dozen</span><span class="mqty">fry at home · any day</span><span class="mlead"></span><span class="mprice">$20</span></div>
             <div class="mrow"><span class="mname">Catering Trays</span><span class="mqty">3 dozen min</span><span class="mlead"></span><span class="mprice">from $70</span></div>
             <div class="mnote">Add a Pinoy Palmer (calamansi iced tea) +$5 · sauces: sweet chili or spiced vinegar</div></div>
-          <div class="foot"><div class="hrs2"><span>Sat &amp; Sun · 11–2</span><small>Fresh-fried until we sell out</small></div>
-            <div class="scan"><div class="txt"><div class="t1">Skip the line — order ahead</div><div class="t2">cuppalumpia.com</div></div><div class="qrplate"><div class="qr" data-box="112"></div></div></div></div>
+          <div class="foot light"><div class="hrs2"><span>Sat &amp; Sun · 11–2</span><small>Fresh-fried until we sell out</small></div>
+            <div class="scan"><div class="txt"><div class="t1">Skip the line — order ahead</div><div class="t2">cuppalumpia.com</div></div><div class="qrplate"><div class="qr" data-box="84"></div></div></div></div>
         </div></div></div>`;
 
   document.querySelectorAll('#z4 .qr').forEach(makeQR);
