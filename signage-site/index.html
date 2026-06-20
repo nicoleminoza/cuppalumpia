@@ -75,10 +75,13 @@
   .panel .sub{ font-family:'Oswald',sans-serif; font-weight:700; font-size:19px; letter-spacing:0.16em; text-transform:uppercase; color:var(--esp); margin-top:14px; }
   .panel .hrs{ font-family:'Zilla Slab',serif; font-weight:600; font-size:30px; margin-top:18px; }
   .panel .ital{ font-family:'Oswald',sans-serif; font-weight:500; font-style:normal; font-size:13.5px; letter-spacing:0.18em; text-transform:uppercase; color:var(--deep); margin-top:13px; }
-  /* Side B (frozen) informational trio: geometric, opened up, anchored low so the espresso footer + QR stay inside the 720px frame */
-  .panel .body.frozen{ justify-content:flex-end; padding-top:18px; padding-bottom:18px; }
-  .panel .body.frozen .big{ font-size:62px; }
-  .panel .body.frozen .sub{ margin-top:24px; }
+  /* Side B (frozen): headline + logistics centered as one group with a modest
+     gap between the two blocks — even top/bottom cushion, no cavernous center. */
+  .panel .body.frozen{ justify-content:center; padding-top:24px; padding-bottom:24px; }
+  .panel .body.frozen .big{ font-size:50px; line-height:0.96; }
+  .panel .body.frozen .sub{ margin-top:46px; }
+  .panel .body.frozen .midline{ margin-top:30px; }
+  .panel .body.frozen .ital{ margin-top:34px; margin-bottom:0; }
   /* compact footer on the frozen side so the QR clears the bottom edge */
   .panel:has(.body.frozen) .foot{ padding:16px 30px 26px; }
   .panel .midline{ font-family:'Oswald',sans-serif; font-weight:700; font-size:24px; letter-spacing:0.12em; text-transform:uppercase; color:var(--esp); line-height:1.12; margin-top:18px; }
@@ -278,7 +281,7 @@
       <p>Buy <b>reaction time</b>. At highway speed a driver needs roughly a quarter-mile to read a word, register the craving, and ease off the gas. So this sign says <b>one thing</b>: the product and the distance, and nothing else. No menu, no logo fine print. Its only job is to plant <i>“lumpia, soon”</i> so the next sign can close it.</p></div>
     <div class="scol"><div class="slab">How to display</div>
       <ul>
-        <li><b>48 × 36″ coroplast</b> on an H-stake or twin steel stakes, driven into the shoulder.</li>
+        <li><b>24 × 18″ coroplast</b> on an H-stake or twin steel stakes, driven into the shoulder.</li>
         <li>Angle it <b>10–15° toward oncoming traffic</b>, not flat to the road, so it faces the windshield, not the passing door.</li>
         <li>Print <b>Side A and Side B as separate panels</b>, one per approach direction.</li>
       </ul></div>
@@ -292,7 +295,7 @@
       <p>Convert the primed driver into a <b>turn</b>. This is the commitment point: an explicit <b>street name</b> and a <b>single, unmistakable arrow</b>. Hesitation here means a missed turn, so it answers <i>where</i> early enough for them to signal and slow before the merge.</p></div>
     <div class="scol"><div class="slab">How to display</div>
       <ul>
-        <li>Same <b>48 × 36″ coroplast</b>, placed <b>~350 ft before</b> the Madison &amp; Lovgreen turn.</li>
+        <li>Same <b>24 × 18″ coroplast</b>, placed <b>~350 ft before</b> the Madison &amp; Lovgreen turn.</li>
         <li>Arrow direction is everything, so mount <b>two single-sided panels back-to-back</b>, never one flipped file, so left/right reads correctly from each direction.</li>
       </ul></div>
   </div>
@@ -340,7 +343,7 @@
   </div>
 
   <p class="note"><b>Production:</b> all gold-forward to match. For the two directional signs, print <b>separate single-sided panels mounted back-to-back</b> (Side A northbound / Side B southbound) rather than one flipped double-sided file. This guarantees each arrow points correctly and avoids reversed-arrow errors. Sandwich boards are two-sided by nature. The stand sign carries the QR; road signs use the URL only.</p>
-  <p class="note"><b>Sizes:</b> Hook &amp; Action road panels <b>48 × 36″</b> (coroplast on an H-frame or two stakes); Arrival A-frames <b>24 × 36″</b> per side; <b>gold feather flag ≈ 2.5 × 11 ft</b> at the driveway; stand menu sign <b>24 × 18″</b>. Same big type and gold field across all road panels so they read as one trail.</p>
+  <p class="note"><b>Sizes:</b> Hook &amp; Action road panels <b>24 × 18″</b> (coroplast on an H-frame or two stakes); Arrival A-frames <b>24 × 36″</b> per side; <b>gold feather flag ≈ 2.5 × 11 ft</b> at the driveway; stand menu sign <b>24 × 18″</b>. Same big type and gold field across all road panels so they read as one trail.</p>
 </div>
 
 <script>
@@ -374,14 +377,14 @@
 
   // Zone 1 — The Hook
   switcher('z1', [
-    { btn:'Madison · ¼ mi', tag:'The Hook · 48 × 36″ · Madison approach, either direction', msg:'Lumpia<br>Ahead', dist:'¼ Mile' },
-    { btn:'From 305', tag:'The Hook · 48 × 36″ · 305 corner, facing east', msg:'Lumpia<br>Ahead', dist:'0.3 Mile' },
+    { btn:'Madison · ¼ mi', tag:'The Hook · 24 × 18″ · Madison approach, either direction', msg:'Lumpia<br>Ahead', dist:'¼ Mile' },
+    { btn:'From 305', tag:'The Hook · 24 × 18″ · 305 corner, facing east', msg:'Lumpia<br>Ahead', dist:'0.3 Mile' },
   ], tease);
 
   // Zone 2 — The Action (directional at the turn)
   switcher('z2', [
-    { btn:'Side A · NB', tag:'The Turn · Side A · northbound · 48 × 36″', arrow:A_TURNL, msg:'Left on<br><span class="em">Lovgreen</span>' },
-    { btn:'Side B · SB', tag:'The Turn · Side B · southbound · 48 × 36″', arrow:A_TURNR, msg:'Right on<br><span class="em">Lovgreen</span>' },
+    { btn:'Side A · NB', tag:'The Turn · Side A · northbound · 24 × 18″', arrow:A_TURNL, msg:'Left on<br><span class="em">Lovgreen</span>' },
+    { btn:'Side B · SB', tag:'The Turn · Side B · southbound · 24 × 18″', arrow:A_TURNR, msg:'Right on<br><span class="em">Lovgreen</span>' },
   ], bdClean);
 
   // Zone 3 — sandwich boards
