@@ -14,6 +14,10 @@ const MENU = [
 
 const TIME_SLOTS = ['11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM', '1:00 PM', '1:30 PM'];
 
+// Web3Forms access key — get a free key at https://web3forms.com (emailed to hello@cuppalumpia.com).
+// Paste it between the quotes below to start receiving orders by email.
+const WEB3FORMS_ACCESS_KEY = 'REPLACE_WITH_YOUR_WEB3FORMS_ACCESS_KEY';
+
 function nextWeekendISO() {
   const d = new Date();
   for (let i = 0; i < 7; i++) {
@@ -99,6 +103,7 @@ function Reserve() {
     date: nextWeekendISO(), time: '11:00 AM' });
   const [done, setDone] = React.useState(null);
   const [err, setErr] = React.useState('');
+  const [sending, setSending] = React.useState(false);
 
   const total = MENU.reduce((s, m) => s + qty[m.id] * m.price, 0);
   const count = MENU.reduce((s, m) => s + qty[m.id], 0);
@@ -106,7 +111,7 @@ function Reserve() {
   const frozenOnly = qty.frozen > 0 && !hasFresh;
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
     if (!form.name.trim()) return setErr('Add a name for the order.');
     if (count === 0) return setErr('Add at least one item.');
@@ -114,8 +119,37 @@ function Reserve() {
       return setErr('Fresh-fried pickup is Saturday or Sunday only. Pick a weekend date.');
     }
     setErr('');
-    setDone({ ...form, frozenOnly, hasFresh,
-      items: MENU.filter((m) => qty[m.id] > 0).map((m) => ({ ...m, n: qty[m.id] })), total });
+
+    const items = MENU.filter((m) => qty[m.id] > 0).map((m) => ({ ...m, n: qty[m.id] }));
+    const orderLines = items.map((m) => `${m.n} × ${m.name} — $${m.price * m.n}`).join('\n');
+
+    setSending(true);
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_ACCESS_KEY,
+          subject: `New order — ${form.name} — $${total}`,
+          from_name: 'Cuppa Lumpia website',
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          order_type: frozenOnly ? 'Frozen (any-day pickup)' : 'Fresh-fried (weekend)',
+          pickup_date: fmtDate(form.date),
+          pickup_time: frozenOnly ? 'Confirmed by email' : form.time,
+          order: orderLines,
+          total: `$${total}`,
+        }),
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message || 'Submission failed');
+      setDone({ ...form, frozenOnly, hasFresh, items, total });
+    } catch (e2) {
+      setErr('Sorry — your order didn’t go through. Please try again, or text us to reserve.');
+    } finally {
+      setSending(false);
+    }
   };
 
   const reset = () => { setQty({ half: 0, full: 0, frozen: 0, palmer: 0 });
@@ -236,14 +270,15 @@ function Reserve() {
               </div>
               {err && <div style={{ fontFamily: "'Lora',serif", fontStyle: 'italic', fontSize: 14,
                 color: 'var(--accent)' }}>{err}</div>}
-              <button type="submit" className="cl-submit" style={{ appearance: 'none',
+              <button type="submit" className="cl-submit" disabled={sending} style={{ appearance: 'none',
                 marginTop: 6, padding: '18px 30px', background: 'var(--ink)', color: 'var(--bg)',
-                border: '1px solid var(--ink)', cursor: 'pointer', fontFamily: "'Oswald',sans-serif",
+                border: '1px solid var(--ink)', cursor: sending ? 'default' : 'pointer',
+                opacity: sending ? 0.6 : 1, fontFamily: "'Oswald',sans-serif",
                 fontWeight: 600, fontSize: 13, letterSpacing: '0.22em', textTransform: 'uppercase',
                 display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 12,
                 transition: 'all .25s' }}>
-                Reserve {total > 0 ? `· $${total}` : 'this batch'}
-                <window.ArrowRight size={16} />
+                {sending ? 'Sending…' : <>Reserve {total > 0 ? `· $${total}` : 'this batch'}
+                <window.ArrowRight size={16} /></>}
               </button>
               <p style={{ fontFamily: "'Lora',serif", fontSize: 13.5, lineHeight: 1.5,
                 color: 'var(--muted)', margin: 0 }}>
