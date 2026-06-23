@@ -1,0 +1,4 @@
+{
+  "soldOutDate": "",
+  "_help": "To mark the stand SOLD OUT for a day, set soldOutDate to that day's date in YYYY-MM-DD form (e.g. 2026-06-27). The whole site will show 'Sold out for today'. It auto-clears the next day, so you can set-and-forget. To undo immediately, set it back to an empty string."
+}
