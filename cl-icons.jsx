@@ -90,7 +90,22 @@ const Leaf = (p) => (
   </Icon>
 );
 
+const Bell = (p) => (
+  <Icon {...p}>
+    <path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6Z" />
+    <path d="M10.2 20a2 2 0 0 0 3.6 0" />
+  </Icon>
+);
+
+const Wallet = (p) => (
+  <Icon {...p}>
+    <path d="M3 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z" />
+    <path d="M3 9h14a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H3" />
+    <circle cx="16" cy="13" r="1.1" fill="currentColor" stroke="none" />
+  </Icon>
+);
+
 Object.assign(window, {
   MapPin, Clock, Instagram, Mail, Minus, Plus, Check,
-  ArrowUpRight, ArrowRight, Wind, Flame, NoEntry, Leaf,
+  ArrowUpRight, ArrowRight, Wind, Flame, NoEntry, Leaf, Bell, Wallet,
 });

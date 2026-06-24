@@ -118,52 +118,75 @@ function Placeholder({ caption, label, kicker = 'Photo coming soon', ratio = '4 
 
 // ── Live open / sold-out status off the device clock ─────────────────────────
 // Hours: Sat & Sun, 11:00–14:00. Pre-orders held until 13:30.
-// Before the launch weekend (Jun 27–28, 2026) the stand reads "Opens soon".
-const CL_LAUNCH = new Date(2026, 5, 27, 11, 0); // Jun 27, 2026, 11:00 (local)
+// Before the launch weekend (Jul 11–12, 2026) the stand reads "Opens soon".
+// Manual sold-out: edit status.json in the repo (soldOutDate = today's date,
+// YYYY-MM-DD) to flip the whole site to "Sold out for today". It auto-clears
+// the next day, so it's safe to set and forget.
+const CL_LAUNCH = new Date(2026, 6, 11, 11, 0); // Jul 11, 2026, 11:00 (local)
+const clYMD = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+function clNextBack(now) {
+  const day = now.getDay(), mins = now.getHours() * 60 + now.getMinutes(), CLOSE = 14 * 60;
+  let add = 0;
+  if (day === 6 && mins >= CLOSE) add = 1;        // Sat after close → Sun
+  else if (day === 0 && mins >= CLOSE) add = 6;   // Sun after close → Sat
+  else if (day === 6 || day === 0) add = 0;       // weekend, same day
+  else add = (6 - day + 7) % 7;                   // weekday → next Sat
+  const next = new Date(now); next.setDate(now.getDate() + add);
+  return next.getDay() === 6 ? 'Saturday' : 'Sunday';
+}
+
 function useOpenStatus() {
+  const [manualSoldOut, setManualSoldOut] = React.useState(false);
+
+  // Poll the owner-editable status.json (cache-busted) for a manual sold-out flag.
+  React.useEffect(() => {
+    let alive = true;
+    const load = () => fetch('status.json?t=' + Date.now())
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => { if (alive && j) setManualSoldOut(j.soldOutDate === clYMD(new Date())); })
+      .catch(() => {});
+    load();
+    const id = setInterval(load, 120000); // re-check every 2 min
+    return () => { alive = false; clearInterval(id); };
+  }, []);
+
   const compute = () => {
     const now = new Date();
     if (now < CL_LAUNCH) {
-      return {
-        open: false, prelaunch: true,
-        label: 'Opening June 27',
-        sub: 'Farm stand opens June 27 & 28',
-      };
+      return { open: false, prelaunch: true, label: 'Stand opens July 11 & 12', sub: '' };
     }
-    const day = now.getDay(); // 0 Sun … 6 Sat
+    const day = now.getDay();
     const mins = now.getHours() * 60 + now.getMinutes();
     const isWeekend = day === 0 || day === 6;
-    const OPEN = 11 * 60,CLOSE = 14 * 60,PRE = 13 * 60 + 30;
-    if (isWeekend && mins >= OPEN && mins < CLOSE) {
-      const preOpen = mins < PRE;
-      return {
-        open: true,
-        label: 'Open now',
-        sub: preOpen ? 'Rolling until we run out' : 'Last batches, pre-orders held to 1:30'
-      };
+    const OPEN = 11 * 60, CLOSE = 14 * 60, PRE = 13 * 60 + 30;
+    const nextDay = clNextBack(now);
+
+    // Owner flipped sold-out for today
+    if (manualSoldOut) {
+      return { open: false, soldOut: true, label: 'Sold out for today',
+        sub: isWeekend && mins < CLOSE ? 'All gone — back tomorrow' : `Back ${nextDay} · 11–2` };
     }
-    // Next opening
-    let add = 0;
-    if (day === 6 && mins >= CLOSE) add = 1; // Sat after close → Sun
-    else if (day === 0 && mins >= CLOSE) add = 6; // Sun after close → Sat
-    else if (day === 6 || day === 0) add = 0; // weekend morning before open
-    else add = (6 - day + 7) % 7; // weekday → next Sat
-    const next = new Date(now);
-    next.setDate(now.getDate() + add);
-    const nextDay = next.getDay() === 6 ? 'Saturday' : 'Sunday';
-    const today = (day === 6 || day === 0) && mins < OPEN;
-    return {
-      open: false,
-      label: 'Sold out for today',
-      sub: today ? 'Opens at 11:00 AM' : `Back ${nextDay} · 11–2`
-    };
+    // Open hours
+    if (isWeekend && mins >= OPEN && mins < CLOSE) {
+      return { open: true, label: 'Open now',
+        sub: mins < PRE ? 'Rolling until we run out' : 'Last batches, pre-orders held to 1:30' };
+    }
+    // Weekend morning, before we open
+    if (isWeekend && mins < OPEN) {
+      return { open: false, label: 'Opens at 11:00 AM', sub: 'Fresh-fried, 11–2 today' };
+    }
+    // Weekend after close, or any weekday
+    return { open: false, label: `Back ${nextDay} · 11–2`,
+      sub: isWeekend ? "That's a wrap for today" : 'See you this weekend' };
   };
-  const [status, setStatus] = React.useState(compute);
+
+  const [, setTick] = React.useState(0);
   React.useEffect(() => {
-    const id = setInterval(() => setStatus(compute()), 30000);
+    const id = setInterval(() => setTick((t) => t + 1), 30000);
     return () => clearInterval(id);
   }, []);
-  return status;
+  return compute();
 }
 
 function StatusDot({ open, style }) {
@@ -180,7 +203,56 @@ function StatusDot({ open, style }) {
 
 }
 
+// ── Framed photo — matches the Placeholder frame, for real imagery ───────────
+function Photo({ src, alt = '', ratio = '4 / 5', height, position = 'center', style }) {
+  return (
+    <div style={{ position: 'relative', width: '100%', aspectRatio: height ? undefined : ratio,
+      height, border: '1px solid var(--line)', overflow: 'hidden', background: 'var(--stage)',
+      ...style }}>
+      <img src={src} alt={alt} loading="lazy" style={{ width: '100%', height: '100%',
+        objectFit: 'cover', objectPosition: position, display: 'block' }} />
+    </div>);
+
+}
+
+// ── Drag-in photo slot — user drops their own image; persists via sidecar ───
+// image-slot's shadow :host hard-codes height:160px, so aspect-ratio on the
+// element is ignored. Wrap it in an aspect-ratio frame and force the slot to
+// fill it (inline height:100% beats the shadow :host rule).
+function PhotoSlot({ id, ratio = '4 / 5', placeholder = 'Drop a photo', style }) {
+  return (
+    <div style={{ position: 'relative', width: '100%', aspectRatio: ratio, ...style }}>
+      <image-slot
+        id={id}
+        shape="rect"
+        fit="cover"
+        placeholder={placeholder}
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%',
+          border: '1px solid var(--line)', background: 'var(--stage)' }}>
+      </image-slot>
+    </div>);
+
+}
+
+// ── Wordmark — the locked "Cuppa LUMPIA" lockup (Option A: Stacked Editorial) ─
+// One component, used in BOTH the hero and the footer so they never drift.
+// LUMPIA is the anchor; "Cuppa" is locked to 46% of it at every breakpoint via
+// calc(), so the ratio can't change with viewport. Pass the LUMPIA size as a
+// CSS length/clamp string; the script derives from it.
+function Wordmark({ lumpia = 'clamp(64px, 12vw, 168px)', style }) {
+  const cuppa = 'calc(0.46 * (' + lumpia + '))';
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', ...style }}>
+      <div style={{ fontFamily: "'Yellowtail',cursive", color: 'var(--accent)',
+        fontSize: cuppa, lineHeight: 1, transform: 'rotate(-2deg)', transformOrigin: 'left center',
+        marginLeft: '0.12em', marginBottom: '0.05em' }}>Cuppa</div>
+      <div style={{ fontFamily: 'var(--display)', fontWeight: 'var(--display-weight)', color: 'var(--ink)',
+        fontSize: lumpia, letterSpacing: '0.012em', lineHeight: 0.9 }}>LUMPIA</div>
+    </div>);
+
+}
+
 Object.assign(window, {
-  StickerLabel, KraftCup, Kicker, SectionTag, Rule, Placeholder,
+  StickerLabel, KraftCup, Kicker, SectionTag, Rule, Placeholder, Photo, PhotoSlot, Wordmark,
   useOpenStatus, StatusDot
 });

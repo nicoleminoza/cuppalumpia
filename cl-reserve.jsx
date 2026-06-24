@@ -14,23 +14,62 @@ const MENU = [
 
 const TIME_SLOTS = ['11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM', '1:00 PM', '1:30 PM'];
 
-// Web3Forms access key — get a free key at https://web3forms.com (emailed to hello@cuppalumpia.com).
-// Paste it between the quotes below to start receiving orders by email.
-const WEB3FORMS_ACCESS_KEY = 'REPLACE_WITH_YOUR_WEB3FORMS_ACCESS_KEY';
+// ─────────────────────────────────────────────────────────────────
+// WEB3FORMS KEY — RESERVATION FORM  ->  orders@cuppalumpia.com
+// Paste the access key VERIFIED TO orders@cuppalumpia.com below.
+// (Create at web3forms.com using orders@cuppalumpia.com, confirm the
+//  link sent to that alias, then paste the key here.)
+// ─────────────────────────────────────────────────────────────────
+const ORDERS_ACCESS_KEY = 'c2322977-6591-4940-a83c-c8943c13bf9e'; // verified to orders@cuppalumpia.com
 
-function nextWeekendISO() {
-  const d = new Date();
-  for (let i = 0; i < 7; i++) {
-    const day = d.getDay();
-    if (day === 6 || day === 0) break;
-    d.setDate(d.getDate() + 1);
-  }
-  return d.toISOString().slice(0, 10);
+// ── Pickup-date rules ───────────────────────────────────────────
+// Stand season: Sat & Sun, Jul 11 – Sep 30, 2026. Closed Aug 22–23.
+//   Fresh-fried → weekend dates only (within season, minus the closed weekends).
+//   Frozen      → any day from today through Sep 30, minus the closed weekends.
+const SEASON_START = '2026-07-11';
+const SEASON_END   = '2026-09-30';
+const CLOSED_DATES = ['2026-08-22', '2026-08-23'];
+
+function isoToDate(iso) { return new Date(iso + 'T12:00'); }
+function dateToISO(d) {
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') +
+    '-' + String(d.getDate()).padStart(2, '0');
 }
-function todayISO() { return new Date().toISOString().slice(0, 10); }
-function isWeekend(iso) {
-  try { const d = new Date(iso + 'T12:00').getDay(); return d === 0 || d === 6; }
-  catch { return false; }
+function todayISO() { return dateToISO(new Date()); }
+function tomorrowISO() { const d = new Date(); d.setDate(d.getDate() + 1); return dateToISO(d); }
+// Frozen sells year-round; cap the picker a year out so the native control stays sane.
+const FROZEN_MAX = (() => { const d = new Date(); d.setDate(d.getDate() + 365); return dateToISO(d); })();
+function isClosed(iso) { return CLOSED_DATES.includes(iso); }
+
+// Valid fresh-fried weekend dates: Sat/Sun, today-or-later, within the season,
+// excluding the two closed weekends.
+function buildFreshDates() {
+  const out = [], today = todayISO(), end = isoToDate(SEASON_END);
+  for (let d = isoToDate(SEASON_START); d <= end; d.setDate(d.getDate() + 1)) {
+    const iso = dateToISO(d), day = d.getDay();
+    if ((day === 0 || day === 6) && !isClosed(iso) && iso >= today) out.push(iso);
+  }
+  return out;
+}
+const FRESH_DATES = buildFreshDates();
+function isValidFresh(iso) { return FRESH_DATES.includes(iso); }
+// Frozen pickup: next-day at the earliest, year-round, excluding any weeks we're away.
+function isValidFrozen(iso) {
+  return iso >= tomorrowISO() && iso <= FROZEN_MAX && !isClosed(iso);
+}
+// Frozen default: the next available day, skipping any week we're closed.
+function nextFrozenDate() {
+  const d = new Date();
+  for (let i = 0; i < 400; i++) {
+    d.setDate(d.getDate() + 1);
+    const iso = dateToISO(d);
+    if (isValidFrozen(iso)) return iso;
+  }
+  return tomorrowISO();
+}
+function fmtOption(iso) {
+  try { return isoToDate(iso).toLocaleDateString('en-US',
+    { weekday: 'short', month: 'short', day: 'numeric' }); } catch { return iso; }
 }
 
 function Stepper({ value, onAdd }) {
@@ -46,7 +85,7 @@ function Stepper({ value, onAdd }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 0, border: '1px solid var(--line)' }}>
       {btn(-1, <window.Minus size={15} />, value === 0)}
-      <div style={{ width: 42, textAlign: 'center', fontFamily: "var(--display)", fontSize: 18,
+      <div style={{ width: 42, textAlign: 'center', fontFamily: "var(--display)", fontWeight: "var(--display-weight)", fontSize: 18,
         color: value > 0 ? 'var(--ink)' : 'var(--muted)',
         borderLeft: '1px solid var(--line)', borderRight: '1px solid var(--line)',
         lineHeight: '32px', height: 34 }}>{value}</div>
@@ -55,12 +94,12 @@ function Stepper({ value, onAdd }) {
   );
 }
 
-function Field({ label, children, hint }) {
+function Field({ label, children, hint, required }) {
   return (
     <label style={{ display: 'block' }}>
       <span style={{ display: 'block', fontFamily: "'Oswald',sans-serif", fontWeight: 600,
         fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--muted)',
-        marginBottom: 9 }}>{label}</span>
+        marginBottom: 9 }}>{label}{required && <span style={{ color: 'var(--accent)', marginLeft: 4 }}>*</span>}</span>
       {children}
       {hint && <span style={{ display: 'block', fontFamily: "'Lora',serif", fontStyle: 'italic',
         fontSize: 12.5, color: 'var(--muted)', marginTop: 7 }}>{hint}</span>}
@@ -75,35 +114,14 @@ const inputStyle = {
   transition: 'border-color .2s',
 };
 
-function CateringNote() {
-  return (
-    <div style={{ marginTop: 'clamp(34px,5vw,60px)', borderTop: '1px solid var(--line)',
-      paddingTop: 'clamp(22px,3vw,32px)', display: 'flex', justifyContent: 'space-between',
-      alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
-      <span style={{ fontFamily: "'Lora',serif", fontSize: 'clamp(16px,1.6vw,20px)',
-        color: 'var(--ink)' }}>
-        Feeding a party? <span style={{ fontStyle: 'italic', color: 'var(--muted)' }}>
-          We cater by the tray.</span>
-      </span>
-      <a href="mailto:catering@cuppalumpia.com?subject=Catering%20inquiry" className="cl-flink"
-        style={{ display: 'inline-flex', alignItems: 'center', gap: 10, fontFamily: "'Oswald',sans-serif",
-          fontWeight: 600, fontSize: 12.5, letterSpacing: '0.18em', textTransform: 'uppercase',
-          color: 'var(--ink)', textDecoration: 'none', borderBottom: '1px solid var(--accent)',
-          paddingBottom: 4 }}>
-        <window.Mail size={16} style={{ color: 'var(--accent)' }} />
-        Email us to plan catering
-      </a>
-    </div>
-  );
-}
-
 function Reserve() {
   const [qty, setQty] = React.useState({ half: 0, full: 0, frozen: 0, palmer: 0 });
   const [form, setForm] = React.useState({ name: '', email: '', phone: '',
-    date: nextWeekendISO(), time: '11:00 AM' });
+    date: FRESH_DATES[0], time: '11:00 AM' });
   const [done, setDone] = React.useState(null);
   const [err, setErr] = React.useState('');
   const [sending, setSending] = React.useState(false);
+  const [hp, setHp] = React.useState(''); // honeypot — humans never fill this
 
   const total = MENU.reduce((s, m) => s + qty[m.id] * m.price, 0);
   const count = MENU.reduce((s, m) => s + qty[m.id], 0);
@@ -111,49 +129,66 @@ function Reserve() {
   const frozenOnly = qty.frozen > 0 && !hasFresh;
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
+  // Keep the pickup date valid for the current order type:
+  //   fresh present  → snap to the first valid weekend
+  //   frozen only    → default to the next day (skipping closed weekends)
+  React.useEffect(() => {
+    if (hasFresh) {
+      if (!isValidFresh(form.date)) set('date', FRESH_DATES[0]);
+    } else if (frozenOnly) {
+      if (!isValidFrozen(form.date) || isValidFresh(form.date)) set('date', nextFrozenDate());
+    }
+  }, [hasFresh, frozenOnly]); // eslint-disable-line
+
   const submit = async (e) => {
     e.preventDefault();
+    if (hp) { setDone({ ...form, frozenOnly, hasFresh, items: [], total }); return; } // bot trapped — fake success, send nothing
     if (!form.name.trim()) return setErr('Add a name for the order.');
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim());
+    const phoneOk = form.phone.replace(/\D/g, '').length >= 10;
+    if (!emailOk) return setErr('Add a valid email so we can confirm your order.');
+    if (!phoneOk) return setErr('Add a valid phone number so we can reach you about pickup.');
     if (count === 0) return setErr('Add at least one item.');
-    if (hasFresh && !isWeekend(form.date)) {
-      return setErr('Fresh-fried pickup is Saturday or Sunday only. Pick a weekend date.');
+    if (hasFresh && !isValidFresh(form.date)) {
+      return setErr('Fresh-fried pickup is a weekend in the season (Jul 11 – Sep 30; closed Aug 22–23).');
+    }
+    if (frozenOnly && !isValidFrozen(form.date)) {
+      return setErr(isClosed(form.date)
+        ? "We're away that week. Please pick another pickup day."
+        : 'Frozen orders are next-day. Pick a day from tomorrow on.');
     }
     setErr('');
-
     const items = MENU.filter((m) => qty[m.id] > 0).map((m) => ({ ...m, n: qty[m.id] }));
     const orderLines = items.map((m) => `${m.n} × ${m.name} — $${m.price * m.n}`).join('\n');
-
     setSending(true);
     try {
       const res = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
-          access_key: WEB3FORMS_ACCESS_KEY,
+          access_key: ORDERS_ACCESS_KEY,
           subject: `New order — ${form.name} — $${total}`,
           from_name: 'Cuppa Lumpia website',
-          name: form.name,
-          email: form.email,
-          phone: form.phone,
+          name: form.name, email: form.email, phone: form.phone,
           order_type: frozenOnly ? 'Frozen (any-day pickup)' : 'Fresh-fried (weekend)',
           pickup_date: fmtDate(form.date),
           pickup_time: frozenOnly ? 'Confirmed by email' : form.time,
-          order: orderLines,
-          total: `$${total}`,
+          order: orderLines, total: `$${total}`,
+          botcheck: '',
         }),
       });
       const data = await res.json();
-      if (!data.success) throw new Error(data.message || 'Submission failed');
+      if (!data.success) throw new Error(data.message || 'failed');
       setDone({ ...form, frozenOnly, hasFresh, items, total });
     } catch (e2) {
-      setErr('Sorry — your order didn’t go through. Please try again, or text us to reserve.');
+      setErr('Sorry — your order did not go through. Please try again, or text us to reserve.');
     } finally {
       setSending(false);
     }
   };
 
   const reset = () => { setQty({ half: 0, full: 0, frozen: 0, palmer: 0 });
-    setForm({ name: '', email: '', phone: '', date: nextWeekendISO(), time: '11:00 AM' });
+    setForm({ name: '', email: '', phone: '', date: FRESH_DATES[0], time: '11:00 AM' });
     setDone(null); setErr(''); };
 
   const fmtDate = (iso) => {
@@ -172,12 +207,17 @@ function Reserve() {
 
       {!done ? (
         <>
-          <StatementR style={{ marginTop: 30, maxWidth: 720 }}>
-            Reserve your batch. Pay at the stand.
+          <StatementR style={{ marginTop: 30, maxWidth: 820 }}>
+            Order frozen dozens to fry any&nbsp;day — or reserve fresh-fried for the weekend&nbsp;stand.
           </StatementR>
           <form onSubmit={submit} className="cl-resv" style={{ display: 'grid',
             gridTemplateColumns: '1fr 1fr', gap: 'clamp(34px,6vw,80px)',
             marginTop: 'clamp(38px,5vw,64px)', alignItems: 'start' }}>
+            {/* honeypot — off-screen; bots fill it, humans don't */}
+            <input type="text" name="company" tabIndex={-1} autoComplete="off"
+              value={hp} onChange={(e) => setHp(e.target.value)} aria-hidden="true"
+              style={{ position: 'absolute', left: '-9999px', width: 1, height: 1,
+                opacity: 0, pointerEvents: 'none' }} />
             {/* order builder */}
             <div>
               <KickerR>Build your batch</KickerR>
@@ -208,7 +248,7 @@ function Reserve() {
                 <span style={{ fontFamily: "'Oswald',sans-serif", fontWeight: 600, fontSize: 12,
                   letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--muted)' }}>
                   Estimated total</span>
-                <span style={{ fontFamily: "var(--display)", fontSize: 'clamp(40px,5vw,60px)',
+                <span style={{ fontFamily: "var(--display)", fontWeight: "var(--display-weight)", fontSize: 'clamp(40px,5vw,60px)',
                   color: 'var(--accent)', lineHeight: 1, transition: 'color .2s' }}>${total}</span>
               </div>
               <div style={{ fontFamily: "'Lora',serif", fontStyle: 'italic', fontSize: 14,
@@ -220,20 +260,20 @@ function Reserve() {
             {/* details */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
               <KickerR>Your details</KickerR>
-              <Field label="Name">
+              <Field label="Name" required>
                 <input style={inputStyle} value={form.name} placeholder="Who's it under?"
                   onFocus={(e) => e.target.style.borderColor = 'var(--accent)'}
                   onBlur={(e) => e.target.style.borderColor = 'var(--line)'}
                   onChange={(e) => set('name', e.target.value)} />
               </Field>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 22 }}>
-                <Field label="Email">
+                <Field label="Email" required>
                   <input style={inputStyle} type="email" value={form.email} placeholder="you@email.com"
                     onFocus={(e) => e.target.style.borderColor = 'var(--accent)'}
                     onBlur={(e) => e.target.style.borderColor = 'var(--line)'}
                     onChange={(e) => set('email', e.target.value)} />
                 </Field>
-                <Field label="Phone">
+                <Field label="Phone" required>
                   <input style={inputStyle} type="tel" value={form.phone} placeholder="(206) 000-0000"
                     onFocus={(e) => e.target.style.borderColor = 'var(--accent)'}
                     onBlur={(e) => e.target.style.borderColor = 'var(--line)'}
@@ -242,19 +282,31 @@ function Reserve() {
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 22 }}>
                 <Field label="Pickup date"
-                  hint={frozenOnly ? 'Frozen — pick up any day' : 'Saturday or Sunday only'}>
-                  <input style={inputStyle} type="date"
-                    value={form.date} min={todayISO()}
-                    onFocus={(e) => e.target.style.borderColor = 'var(--accent)'}
-                    onBlur={(e) => e.target.style.borderColor = 'var(--line)'}
-                    onChange={(e) => set('date', e.target.value)} />
+                  hint={frozenOnly
+                    ? (isValidFrozen(form.date) ? 'Frozen, year-round, from tomorrow on' : "We're away that week, pick another")
+                    : 'Saturday or Sunday only'}>
+                  {frozenOnly ? (
+                    <input style={{ ...inputStyle, colorScheme: 'dark',
+                      borderBottomColor: isValidFrozen(form.date) ? 'var(--line)' : 'var(--accent)' }}
+                      type="date" value={form.date} min={tomorrowISO()} max={FROZEN_MAX}
+                      onFocus={(e) => e.target.style.borderColor = 'var(--accent)'}
+                      onBlur={(e) => e.target.style.borderColor = isValidFrozen(form.date) ? 'var(--line)' : 'var(--accent)'}
+                      onChange={(e) => set('date', e.target.value)} />
+                  ) : (
+                    <select style={{ ...inputStyle, cursor: 'pointer' }} value={form.date}
+                      onFocus={(e) => e.target.style.borderColor = 'var(--accent)'}
+                      onBlur={(e) => e.target.style.borderColor = 'var(--line)'}
+                      onChange={(e) => set('date', e.target.value)}>
+                      {FRESH_DATES.map((iso) => <option key={iso} value={iso}>{fmtOption(iso)}</option>)}
+                    </select>
+                  )}
                 </Field>
                 {frozenOnly ? (
-                  <Field label="Pickup time" hint="We'll email to confirm">
+                  <Field label="Pickup window" hint="We'll text a 3-hour window">
                     <div style={{ ...inputStyle, color: 'var(--muted)', cursor: 'default',
                       display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <window.Mail size={15} style={{ color: 'var(--accent)' }} />
-                      Confirmed by email
+                      <window.Clock size={15} style={{ color: 'var(--accent)' }} />
+                      Confirmed by text
                     </div>
                   </Field>
                 ) : (
@@ -272,19 +324,21 @@ function Reserve() {
                 color: 'var(--accent)' }}>{err}</div>}
               <button type="submit" className="cl-submit" disabled={sending} style={{ appearance: 'none',
                 marginTop: 6, padding: '18px 30px', background: 'var(--ink)', color: 'var(--bg)',
-                border: '1px solid var(--ink)', cursor: sending ? 'default' : 'pointer',
-                opacity: sending ? 0.6 : 1, fontFamily: "'Oswald',sans-serif",
+                border: '1px solid var(--ink)', cursor: 'pointer', fontFamily: "'Oswald',sans-serif",
                 fontWeight: 600, fontSize: 13, letterSpacing: '0.22em', textTransform: 'uppercase',
                 display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 12,
                 transition: 'all .25s' }}>
-                {sending ? 'Sending…' : <>Reserve {total > 0 ? `· $${total}` : 'this batch'}
-                <window.ArrowRight size={16} /></>}
+                {sending ? 'Sending…' : <>Reserve {total > 0 ? `· $${total}` : 'this batch'} <window.ArrowRight size={16} /></>}
               </button>
+              <p style={{ fontFamily: "'Lora',serif", fontStyle: 'italic', fontSize: 12.5,
+                color: 'var(--muted)', margin: 0 }}>
+                We only use your details to fill this order — never shared, never spammed.
+              </p>
               <p style={{ fontFamily: "'Lora',serif", fontSize: 13.5, lineHeight: 1.5,
                 color: 'var(--muted)', margin: 0 }}>
                 {frozenOnly
-                  ? "No payment now. We'll email to confirm your pickup time, then you settle up at pickup. Cash or card."
-                  : 'No payment now. We hold your batch and you settle up at the stand. Cash or card.'}
+                  ? "Frozen orders are ready next day. We'll text a 3-hour pickup window and Venmo details, then grab them cold from the cooler at our door."
+                  : 'No payment now. We hold your batch and you settle up at the stand. Cash or Venmo @cuppalumpia.'}
               </p>
             </div>
           </form>
@@ -292,17 +346,17 @@ function Reserve() {
       ) : (
         <Success done={done} fmtDate={fmtDate} onReset={reset} />
       )}
-
-      <CateringNote />
     </SectionR>
   );
 }
 
 function Success({ done, fmtDate, onReset }) {
+  const mapsUrl = 'https://www.google.com/maps/search/?api=1&query=9251%20NE%20Lovgreen%20Rd%20Bainbridge%20Island%20WA%2098110';
   return (
     <div className="cl-fade" style={{ marginTop: 'clamp(38px,5vw,64px)' }}>
       <div className="cl-two" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr',
         gap: 'clamp(34px,6vw,80px)', alignItems: 'start' }}>
+        {/* LEFT — reassurance + the single next step */}
         <div>
           <div style={{ width: 60, height: 60, borderRadius: '50%', border: '1px solid var(--green)',
             color: 'var(--green)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -314,26 +368,44 @@ function Success({ done, fmtDate, onReset }) {
           </h2>
           {done.frozenOnly ? (
             <p style={{ fontFamily: "'Lora',serif", fontSize: 'clamp(17px,1.6vw,20px)', lineHeight: 1.6,
-              color: 'var(--ink-soft)', margin: '20px 0 0', maxWidth: 440 }}>
-              We'll email you to confirm a pickup time for
+              color: 'var(--ink-soft)', margin: '22px 0 0', maxWidth: 460 }}>
+              Next up: we'll text your 3-hour pickup window for
               <b style={{ fontWeight: 600, color: 'var(--ink)' }}> {fmtDate(done.date)}</b>. Your
-              frozen dozens will be packed cold and ready to fry at home.
+              frozen dozens wait cold in the cooler at our door.
             </p>
           ) : (
             <p style={{ fontFamily: "'Lora',serif", fontSize: 'clamp(17px,1.6vw,20px)', lineHeight: 1.6,
-              color: 'var(--ink-soft)', margin: '20px 0 0', maxWidth: 440 }}>
-              We'll have it rolled and ready. Come by the stand on
+              color: 'var(--ink-soft)', margin: '22px 0 0', maxWidth: 460 }}>
+              We'll have it rolled and ready. Come by
               <b style={{ fontWeight: 600, color: 'var(--ink)' }}> {fmtDate(done.date)}</b> around
-              <b style={{ fontWeight: 600, color: 'var(--ink)' }}> {done.time}</b>.
+              <b style={{ fontWeight: 600, color: 'var(--ink)' }}> {done.time}</b> — held to 1:30,
+              we roll till we run out.
             </p>
           )}
-          <button onClick={onReset} style={{ appearance: 'none', marginTop: 34, padding: '16px 28px',
-            background: 'transparent', color: 'var(--ink)', border: '1px solid var(--line)',
-            cursor: 'pointer', fontFamily: "'Oswald',sans-serif", fontWeight: 600, fontSize: 12.5,
-            letterSpacing: '0.22em', textTransform: 'uppercase' }}>
-            Place another
-          </button>
+          {done.email && (
+            <p style={{ fontFamily: "'Lora',serif", fontSize: 15, lineHeight: 1.5,
+              color: 'var(--muted)', margin: '16px 0 0', maxWidth: 460 }}>
+              A confirmation is on its way to <b style={{ fontWeight: 600, color: 'var(--ink-soft)' }}>{done.email}</b>.
+            </p>
+          )}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginTop: 32 }}>
+            <button onClick={onReset} style={{ appearance: 'none', padding: '16px 28px',
+              background: 'var(--ink)', color: 'var(--bg)', border: '1px solid var(--ink)',
+              cursor: 'pointer', fontFamily: "'Oswald',sans-serif", fontWeight: 600, fontSize: 12.5,
+              letterSpacing: '0.22em', textTransform: 'uppercase' }}>
+              Place another
+            </button>
+            <a href={mapsUrl} target="_blank" rel="noopener" style={{ appearance: 'none', padding: '16px 28px',
+              background: 'transparent', color: 'var(--ink)', border: '1px solid var(--line)',
+              cursor: 'pointer', fontFamily: "'Oswald',sans-serif", fontWeight: 600, fontSize: 12.5,
+              letterSpacing: '0.22em', textTransform: 'uppercase', textDecoration: 'none',
+              display: 'inline-flex', alignItems: 'center', gap: 10 }}>
+              Get directions <window.ArrowUpRight size={15} />
+            </a>
+          </div>
         </div>
+
+        {/* RIGHT — the receipt: items, total, pay (each once) */}
         <div style={{ border: '1px solid var(--line)', background: 'var(--surface)',
           padding: 'clamp(26px,3vw,40px)' }}>
           <div style={{ fontFamily: "'Oswald',sans-serif", fontWeight: 600, fontSize: 11,
@@ -348,30 +420,32 @@ function Success({ done, fmtDate, onReset }) {
                   {m.kind === 'frozen' && <span style={{ fontFamily: "'Oswald',sans-serif", fontSize: 10,
                     letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--muted)',
                     marginLeft: 8 }}>frozen</span>}</span>
-                <span style={{ fontFamily: "var(--display)", fontSize: 17, color: 'var(--ink)' }}>
+                <span style={{ fontFamily: "var(--display)", fontWeight: "var(--display-weight)", fontSize: 17, color: 'var(--ink)' }}>
                   ${m.n * m.price}</span>
               </div>
             ))}
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
-            marginTop: 18 }}>
+            marginTop: 20 }}>
             <span style={{ fontFamily: "'Oswald',sans-serif", fontWeight: 600, fontSize: 12,
-              letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--muted)' }}>
-              Pay at pickup</span>
-            <span style={{ fontFamily: "var(--display)", fontSize: 34, color: 'var(--accent)' }}>
+              letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink)' }}>
+              Total</span>
+            <span style={{ fontFamily: "var(--display)", fontWeight: "var(--display-weight)", fontSize: 34, color: 'var(--accent)' }}>
               ${done.total}</span>
           </div>
-          <div style={{ height: 1, background: 'var(--line)', margin: '22px 0' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginTop: 8 }}>
+            <window.Wallet size={15} style={{ color: 'var(--muted)', flexShrink: 0 }} />
+            <span style={{ fontFamily: "'Lora',serif", fontSize: 14.5, color: 'var(--muted)' }}>
+              Pay at pickup — cash or Venmo <b style={{ fontWeight: 600, color: 'var(--ink-soft)' }}>@cuppalumpia</b>
+            </span>
+          </div>
+          <div style={{ height: 1, background: 'var(--line)', margin: '24px 0' }} />
           <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
             <window.MapPin size={17} style={{ color: 'var(--accent)', marginTop: 3, flexShrink: 0 }} />
-            <div style={{ fontFamily: "'Lora',serif", fontSize: 15.5, lineHeight: 1.5,
+            <div style={{ fontFamily: "'Lora',serif", fontSize: 15.5, lineHeight: 1.55,
               color: 'var(--ink)' }}>
-              <b style={{ fontWeight: 600 }}>Day Road Farm Stand</b><br />
-              9251 NE Lovgreen Rd, Bainbridge Island, WA<br />
-              <span style={{ color: 'var(--muted)', fontStyle: 'italic' }}>
-                {done.frozenOnly
-                  ? "We'll email to confirm your pickup time."
-                  : 'Held until 1:30 PM. We roll until we run out.'}</span>
+              <b style={{ fontWeight: 600 }}>{done.frozenOnly ? 'Cuppa Lumpia · cooler pickup' : 'Cuppa Lumpia Farm Stand'}</b><br />
+              9251 NE Lovgreen Rd, Bainbridge Island, WA
             </div>
           </div>
         </div>
