@@ -138,7 +138,7 @@ function Catering() {
       <div className="cl-two" style={{ display: 'grid', gridTemplateColumns: '1.02fr 0.98fr',
         gap: 'clamp(34px, 6vw, 80px)', marginTop: 'clamp(40px,5vw,72px)', alignItems: 'start' }}>
         <div>
-          <Placeholder2 caption="A heaping party tray, sweet chili dip at the ready. Beauty shot incoming." kicker="Catering photo coming" ratio="5 / 4" />
+          <Photo2 src="catering-tray-5x4.png" alt="Foil catering tray stacked with fried lumpia and sweet chili dip" ratio="5 / 4" />
           <p style={{ fontFamily: "'Yellowtail',cursive", fontSize: 24, color: 'var(--accent)',
             margin: '20px 0 0', transform: 'rotate(-1.5deg)' }}>
             No plates. No forks. No leftovers.</p>

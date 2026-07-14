@@ -153,7 +153,7 @@ function Hero({ tagline }) {
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center',
             justifyContent: 'center' }}>
             <div className="cl-stage" style={{ width: '100%' }}>
-              <Placeholder caption="Fresh-fried, shatter-crisp glory shot goes here." kicker="Hero photo coming" ratio="4 / 5" />
+              <Photo src="hero-cups-4x5.png" alt="Cuppa Lumpia cups and iced tea in a basket, ready to serve" ratio="4 / 5" />
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 11, marginTop: 18,
               flexWrap: 'wrap' }}>
@@ -310,7 +310,7 @@ function Pairing() {
         </div>
         {/* image */}
         <div>
-          <Placeholder caption="Golden, shatter-crisp, straight-from-the-fryer glory shot goes here." kicker="Lumpia photo coming" ratio="4 / 5" />
+          <Photo src="fryer-lumpia-4x5.png" alt="Golden fried lumpia filling the fryer basket, straight from the oil" ratio="4 / 5" />
         </div>
       </div>
 
@@ -319,7 +319,7 @@ function Pairing() {
         gap: 'clamp(34px, 6vw, 80px)', marginTop: 'clamp(40px,5vw,72px)', alignItems: 'center',
         borderTop: '1px solid var(--line)', paddingTop: 'clamp(40px,5vw,72px)' }}>
         <div>
-          <Placeholder caption="An ice-cold, sweaty-glass pour of calamansi tea goes right here." kicker="Pinoy Palmer photo coming" ratio="5 / 4" />
+          <Photo src="pinoy-palmer-toast-5x4.png" alt="Two iced Pinoy Palmers clinking together in a toast" ratio="5 / 4" />
         </div>
         <div>
           <Kicker>The Refreshment</Kicker>
