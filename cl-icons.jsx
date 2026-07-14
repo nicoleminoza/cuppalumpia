@@ -105,7 +105,13 @@ const Wallet = (p) => (
   </Icon>
 );
 
+const Star = (p) => (
+  <Icon {...p}>
+    <path d="M12 2.5 14.2 8.9 21 9.1 15.6 13.2 17.6 19.7 12 15.8 6.4 19.7 8.4 13.2 3 9.1 9.8 8.9Z" />
+  </Icon>
+);
+
 Object.assign(window, {
   MapPin, Clock, Instagram, Mail, Minus, Plus, Check,
-  ArrowUpRight, ArrowRight, Wind, Flame, NoEntry, Leaf, Bell, Wallet,
+  ArrowUpRight, ArrowRight, Wind, Flame, NoEntry, Leaf, Bell, Wallet, Star,
 });

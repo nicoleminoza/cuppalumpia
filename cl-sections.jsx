@@ -138,7 +138,9 @@ function Hero({ tagline }) {
               margin: '30px 0 0' }}>{tagline}</p>
             <p style={{ fontFamily: "'Lora',serif", fontStyle: 'italic',
               fontSize: 'clamp(14px, 1.2vw, 16px)', color: 'var(--accent)',
-              margin: '16px 0 0' }}>Sold out both opening days.</p>
+              margin: '16px 0 0' }}>Sold out both opening days. <a href="#reserve"
+              style={{ color: 'inherit', textDecoration: 'underline',
+              textUnderlineOffset: '3px' }}>Reserve ahead so yours is waiting.</a></p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, marginTop: 32 }}>
               <CTA href="#reserve">Order frozen dozens</CTA>
               <CTA href="#pairing" solid={false}>See the menu</CTA>
@@ -150,6 +152,10 @@ function Hero({ tagline }) {
                 borderBottom: '1px solid color-mix(in srgb, var(--accent) 50%, transparent)' }}>Catering available now</a>
               <span style={{ opacity: 0.4 }}>·</span>
               <span>Fresh-fried weekends · 11–2</span>
+              <span style={{ opacity: 0.4 }}>·</span>
+              <a href="https://instagram.com/cuppalumpia" target="_blank" rel="noopener"
+                style={{ color: 'var(--accent)', textDecoration: 'none',
+                borderBottom: '1px solid color-mix(in srgb, var(--accent) 50%, transparent)' }}>@cuppalumpia · weekly drop</a>
             </p>
           </div>
           {/* art object — image placeholder for a hero photo */}

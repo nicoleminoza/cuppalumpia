@@ -208,7 +208,7 @@ function Reserve() {
       {!done ? (
         <>
           <StatementR style={{ marginTop: 30, maxWidth: 820 }}>
-            Order frozen dozens to fry any&nbsp;day — or reserve fresh-fried for the weekend&nbsp;stand.
+            We sell out most weekends. Reserve fresh-fried to skip the line, or order frozen dozens to fry any&nbsp;day.
           </StatementR>
           <form onSubmit={submit} className="cl-resv" style={{ display: 'grid',
             gridTemplateColumns: '1fr 1fr', gap: 'clamp(34px,6vw,80px)',

@@ -371,6 +371,10 @@ function Footer() {
                className="cl-flink" style={footLink}>
               <window.Instagram size={18} style={{ color: 'var(--accent)' }} />@cuppalumpia
             </a>
+            <a href="https://g.page/r/CVuyGFN3KmFgEAI/review" target="_blank" rel="noopener"
+               className="cl-flink" style={footLink}>
+              <window.Star size={18} style={{ color: 'var(--accent)' }} />Leave a Google review
+            </a>
             <a href="mailto:hello@cuppalumpia.com" className="cl-flink" style={footLink}>
               <window.Mail size={18} style={{ color: 'var(--accent)' }} />hello@cuppalumpia.com
             </a>
