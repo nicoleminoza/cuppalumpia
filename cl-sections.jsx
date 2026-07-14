@@ -65,7 +65,7 @@ function AnnounceBar() {
           Frozen dozens &amp; catering —
           <b style={{ fontWeight: 700, color: 'var(--accent)', letterSpacing: '0.06em',
             textTransform: 'uppercase', whiteSpace: 'nowrap' }}>&nbsp;available now</b>.
-          <span style={{ opacity: 0.72 }}>&nbsp; Fresh-fried weekend stand opens July 11 &amp; 12.</span>
+          <span style={{ opacity: 0.72 }}>&nbsp; Fresh-fried at the weekend stand, 11–2.</span>
         </span>
         <a href="#reserve" style={{ fontFamily: "'Oswald',sans-serif", fontWeight: 600,
           fontSize: 10.5, letterSpacing: '0.18em', textTransform: 'uppercase',
@@ -136,7 +136,10 @@ function Hero({ tagline }) {
             <p style={{ fontFamily: "'Lora',serif", fontSize: 'clamp(17px, 1.6vw, 22px)',
               lineHeight: 1.55, color: 'var(--ink-soft)', maxWidth: 440,
               margin: '30px 0 0' }}>{tagline}</p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, marginTop: 38 }}>
+            <p style={{ fontFamily: "'Lora',serif", fontStyle: 'italic',
+              fontSize: 'clamp(14px, 1.2vw, 16px)', color: 'var(--accent)',
+              margin: '16px 0 0' }}>Sold out both opening days.</p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, marginTop: 32 }}>
               <CTA href="#reserve">Order frozen dozens</CTA>
               <CTA href="#pairing" solid={false}>See the menu</CTA>
             </div>
@@ -146,7 +149,7 @@ function Hero({ tagline }) {
               <a href="#catering" style={{ color: 'var(--accent)', textDecoration: 'none',
                 borderBottom: '1px solid color-mix(in srgb, var(--accent) 50%, transparent)' }}>Catering available now</a>
               <span style={{ opacity: 0.4 }}>·</span>
-              <span>Fresh-fried stand opens July 11</span>
+              <span>Fresh-fried weekends · 11–2</span>
             </p>
           </div>
           {/* art object — image placeholder for a hero photo */}
@@ -196,7 +199,7 @@ function Stand() {
         gap: 'clamp(34px, 6vw, 88px)', alignItems: 'start' }}>
         <div>
           <SectionTag num="01" label="The Stand" />
-          <Statement style={{ marginTop: 30 }}>The weekend stand opens July 11 &amp; 12, then every Saturday and Sunday through&nbsp;September.</Statement>
+          <Statement style={{ marginTop: 30 }}>The weekend stand is open every Saturday and Sunday, 11 to 2, through&nbsp;September.</Statement>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: s.prelaunch ? 14 : 12, marginTop: 32,
             padding: s.prelaunch ? 0 : '13px 20px',
             border: s.prelaunch ? 'none' : '1px solid var(--line)',
@@ -235,7 +238,7 @@ function Stand() {
           <MatrixRow k="Hours">
             <window.Clock size={15} style={{ display: 'inline', verticalAlign: '-2px',
               marginRight: 8, color: 'var(--accent)' }} />
-            Saturday &amp; Sunday · 11 AM – 2 PM<br />July 11 through September · until sold out
+            Saturday &amp; Sunday · 11 AM – 2 PM<br />Weekends through September · until sold out
           </MatrixRow>
           <MatrixRow k="Sell-out">
             <em style={{ color: 'var(--ink-soft)' }}>"We fry until we run out, which could happen before two."</em>
