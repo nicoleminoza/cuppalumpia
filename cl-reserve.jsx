@@ -23,12 +23,16 @@ const TIME_SLOTS = ['11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM', '1:00 PM', '
 const ORDERS_ACCESS_KEY = 'c2322977-6591-4940-a83c-c8943c13bf9e'; // verified to orders@cuppalumpia.com
 
 // ── Pickup-date rules ───────────────────────────────────────────
-// Stand season: Sat & Sun, Jul 11 – Sep 30, 2026. Closed Aug 22–23.
-//   Fresh-fried → weekend dates only (within season, minus the closed weekends).
-//   Frozen      → any day from today through Sep 30, minus the closed weekends.
+// Stand season: Sat & Sun, Jul 11 – Sep 30, 2026.
+//   CLOSED_DATES       → fully closed / away: blocks BOTH fresh-fried and frozen.
+//   STAND_CLOSED_DATES → weekend stand off, but frozen pickup is still available.
+//   Fresh-fried → weekend dates only (within season, minus BOTH closed lists).
+//   Frozen      → any day from today through Sep 30, minus CLOSED_DATES only.
 const SEASON_START = '2026-07-11';
 const SEASON_END   = '2026-09-30';
-const CLOSED_DATES = ['2026-08-22', '2026-08-23'];
+const CLOSED_DATES = ['2026-08-22', '2026-08-23'];              // away — no fresh-fried AND no frozen
+const STAND_CLOSED_DATES = ['2026-07-25', '2026-07-26',        // stand closed — fresh-fried off, frozen still OK
+                            '2026-08-01', '2026-08-02'];
 
 function isoToDate(iso) { return new Date(iso + 'T12:00'); }
 function dateToISO(d) {
@@ -40,6 +44,8 @@ function tomorrowISO() { const d = new Date(); d.setDate(d.getDate() + 1); retur
 // Frozen sells year-round; cap the picker a year out so the native control stays sane.
 const FROZEN_MAX = (() => { const d = new Date(); d.setDate(d.getDate() + 365); return dateToISO(d); })();
 function isClosed(iso) { return CLOSED_DATES.includes(iso); }
+// Fresh-fried is unavailable on full-closure days AND stand-only closures.
+function isStandClosed(iso) { return isClosed(iso) || STAND_CLOSED_DATES.includes(iso); }
 
 // Valid fresh-fried weekend dates: Sat/Sun, today-or-later, within the season,
 // excluding the two closed weekends.
@@ -47,7 +53,7 @@ function buildFreshDates() {
   const out = [], today = todayISO(), end = isoToDate(SEASON_END);
   for (let d = isoToDate(SEASON_START); d <= end; d.setDate(d.getDate() + 1)) {
     const iso = dateToISO(d), day = d.getDay();
-    if ((day === 0 || day === 6) && !isClosed(iso) && iso >= today) out.push(iso);
+    if ((day === 0 || day === 6) && !isStandClosed(iso) && iso >= today) out.push(iso);
   }
   return out;
 }
@@ -150,7 +156,7 @@ function Reserve() {
     if (!phoneOk) return setErr('Add a valid phone number so we can reach you about pickup.');
     if (count === 0) return setErr('Add at least one item.');
     if (hasFresh && !isValidFresh(form.date)) {
-      return setErr('Fresh-fried pickup is a weekend in the season (Jul 11 – Sep 30; closed Aug 22–23).');
+      return setErr('Fresh-fried pickup is a weekend in the season (Jul 11 – Sep 30; closed Jul 25–26, Aug 1–2 & 22–23).');
     }
     if (frozenOnly && !isValidFrozen(form.date)) {
       return setErr(isClosed(form.date)
